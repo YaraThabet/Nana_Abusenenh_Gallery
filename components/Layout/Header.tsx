@@ -46,8 +46,9 @@ export const Header = () => {
   return (
     <header
       className={`
-        fixed top-0 left-0 right-0 z-50 w-full 
+        z-50 w-full items-center justify-center
         transition-all duration-300 ease-in-out
+        h-14  lg:h-20
         ${
           isScrolled
             ? "bg-white/95 backdrop-blur-md shadow-lg"
@@ -55,26 +56,26 @@ export const Header = () => {
         }
       `}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 md:h-20 lg:h-24">
+      <div className=" w-full px-auto ">
+        <div className="flex items-center justify-between px-23 pt-5 h-14 md:h-16 lg:h-20">
           <Link href="/" className="flex-shrink-0 group">
-            <div className='font-["Cormorant_Garamond"] text-2xl md:text-3xl font-bold text-gray-900'>
+            <div className='font-["Cormorant_Garamond"] text-xl md:text-2xl lg:text-3xl font-bold text-gray-900'>
               NANA HASHIM
-              <span className='block font-["Inter"] text-[8px] md:text-[10px] uppercase tracking-[0.2em] text-gray-500 group-hover:text-gray-700 transition-colors duration-300'>
+              <span className='block font-["Inter"] text-[7px] md:text-[8px] lg:text-[10px] uppercase tracking-[0.2em] text-gray-500 group-hover:text-gray-700 transition-colors duration-300'>
                 Nana Hashim Abusenenh
               </span>
             </div>
           </Link>
 
-          <nav className='hidden md:flex items-center space-x-1 lg:space-x-8 font-["Inter"] text-sm'>
+          <nav className='hidden md:flex items-center space-x-1 lg:space-x-6 font-["Inter"] text-sm'>
             {navLinks.map(({ href, label }) => (
               <Link
                 key={href}
                 href={href}
                 className='
-                  relative px-3 py-2 text-gray-700 
+                  relative px-2 lg:px-3 py-2 text-gray-700 
                   hover:text-gray-900 transition-colors duration-300 
-                  font-medium text-xs lg:text-sm
+                  font-medium text-[10px] sm:text-xs lg:text-sm
                   after:content-[""] after:absolute after:bottom-0 after:left-1/2 
                   after:w-0 after:h-0.5 after:bg-gray-900 
                   after:transition-all after:duration-300 after:-translate-x-1/2
@@ -86,7 +87,7 @@ export const Header = () => {
             ))}
           </nav>
 
-          <div className="flex items-center space-x-2 sm:space-x-4">
+          <div className="flex items-center space-x-1 sm:space-x-2 lg:space-x-4">
             {icons.map(({ Icon, label }, index) => (
               <button
                 key={index}
@@ -97,7 +98,7 @@ export const Header = () => {
                 "
                 aria-label={label}
               >
-                <Icon className="w-4 h-4 md:w-5 md:h-5" />
+                <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5" />
               </button>
             ))}
 
@@ -118,7 +119,7 @@ export const Header = () => {
 
       <div
         className={`
-          md:hidden fixed inset-x-0 top-16 md:top-20 
+          md:hidden fixed inset-x-0 top-14 md:top-16 lg:top-20
           bg-white/95 backdrop-blur-md shadow-lg
           transition-all duration-300 ease-in-out
           ${

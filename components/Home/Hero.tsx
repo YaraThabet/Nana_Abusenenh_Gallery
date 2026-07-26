@@ -7,7 +7,7 @@ const HeroSection = () => {
       className="w-full h-screen bg-center bg-cover  "
       style={{ backgroundImage: `url('/hero-img.png')` }}
     >
-      <Header />
+     
     </div>
   );
 };
