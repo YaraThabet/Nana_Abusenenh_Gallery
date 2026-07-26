@@ -1,8 +1,9 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/app/lib/supabase";
+import { FilterSidebar } from "@/components/Shop/FilterSidebar";
 
 type Artwork = {
   id: string;
@@ -15,13 +16,6 @@ type Artwork = {
   is_sold: boolean;
 };
 
-const filter = [
-  "Texture & Plaster",
-  "Coastal Studies",
-  "Colour & Form",
-  "Portraiture",
-];
-
 const Page = () => {
   const [search, setSearch] = useState("");
   const [minPrice, setMinPrice] = useState(0);
@@ -31,47 +25,50 @@ const Page = () => {
     string | null
   >(null);
   const [artworks, setArtworks] = useState<Artwork[]>([]);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
+  const [openFilter, setOpenFilter] = useState(false); // ✅ حالة فتح الفلترة في الجوال
 
   useEffect(() => {
     const fetchArtworks = async () => {
       try {
-        setLoading(true); 
+        setLoading(true);
         const { data, error } = await supabase.from("artworks").select("*");
 
         if (error) throw error;
 
         setArtworks(data);
       } catch (error) {
-          if (error instanceof Error) {
-        console.error("Error fetching artworks:", error.message);
-      } else {
-        console.error("Unknown error occurred:", error);
-      }
+        if (error instanceof Error) {
+          console.error("Error fetching artworks:", error.message);
+        } else {
+          console.error("Unknown error occurred:", error);
+        }
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
     fetchArtworks();
   }, []);
 
- 
-  const filterArtworks = artworks.filter((artwork) =>
-    artwork.title.toLowerCase().includes(search.toLowerCase()),
-  );
+  const filterArtworks = artworks.filter((artwork) => {
+    const matchesSearch = artwork.title
+      .toLowerCase()
+      .includes(search.toLowerCase());
+    const matchesCategory =
+      selectedCategories.length === 0 ||
+      selectedCategories.includes(artwork.medium);
+    let matchesAvailability = true;
+    if (selectedAvailability === "Available") {
+      matchesAvailability = artwork.is_available && !artwork.is_sold;
+    } else if (selectedAvailability === "Sold") {
+      matchesAvailability = artwork.is_sold;
+    }
+    const matchesPrice =
+      artwork.price >= minPrice && artwork.price <= maxPrice;
 
-  const handleCategoryChange = (item: string) => {
-    setSelectedCategories((prev) =>
-      prev.includes(item)
-        ? prev.filter((categories) => categories !== item)
-        : [...prev, item],
-    );
-  };
-
-  const handleAvailabilityChange = (status: string) => {
-    setSelectedAvailability(selectedAvailability === status ? null : status);
-  };
+    return matchesSearch && matchesCategory && matchesAvailability && matchesPrice;
+  });
 
   const clearAllFilters = () => {
     setSelectedCategories([]);
@@ -82,7 +79,7 @@ const Page = () => {
 
   return (
     <div className="w-full min-h-screen px-4 sm:px-8 lg:px-23 pt-10 md:pt-24 lg:pt-28 flex flex-col">
-  
+      {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 w-full">
         <div className="text-center sm:text-left">
           <p className="uppercase text-[#b58610] text-xs sm:text-sm tracking-widest font-medium">
@@ -112,96 +109,99 @@ const Page = () => {
         </div>
       </div>
 
-   
+      {/* Main Content */}
       <div className="w-full flex-1 pt-8 pb-5 flex flex-col md:flex-row gap-6">
-        {/* Filters */}
-        <div className="w-full md:w-1/4 border-2 border-gray-200 shadow-xl rounded-2xl flex flex-col items-start p-6">
-          <div className="w-full">
-            <p className="uppercase text-xl pb-4 font-medium">Category</p>
-            {filter.map((item, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0"
-              >
-                <label className="text-gray-600 text-sm">{item}</label>
-                <input
-                  type="checkbox"
-                  checked={selectedCategories.includes(item)}
-                  onChange={() => handleCategoryChange(item)}
-                  className="w-4 h-4 accent-[#b58610] rounded border-gray-300 focus:ring-2 focus:ring-[#b58610]"
-                />
-              </div>
-            ))}
-          </div>
-
-          <div className="w-full pt-6 mt-4 border-t border-gray-200">
-            <p className="uppercase text-xl pb-4 font-medium">Availability</p>
-            {["Available", "Reserved", "Sold"].map((status, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0"
-              >
-                <label className="text-gray-600 text-sm">{status}</label>
-                <input
-                  type="radio"
-                  name="availability"
-                  checked={selectedAvailability === status}
-                  onChange={() => handleAvailabilityChange(status)}
-                  className="w-4 h-4 accent-[#b58610] border-gray-300 focus:ring-2 focus:ring-[#b58610]"
-                />
-              </div>
-            ))}
-          </div>
-
-          <div className="w-full pt-6 mt-4 border-t border-gray-200">
-            <p className="uppercase text-xl pb-4 font-medium">Price</p>
-            <div className="flex items-center gap-2">
-              <div className="relative flex-1">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
-                  $
-                </span>
-                <input
-                  type="number"
-                  value={minPrice}
-                  onChange={(e) => setMinPrice(Number(e.target.value))}
-                  min={0}
-                  max={maxPrice}
-                  className="w-full pl-6 pr-2 py-2 text-sm border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-[#b58610] focus:border-transparent"
-                />
-              </div>
-              <span className="text-gray-400 text-sm">—</span>
-              <div className="relative flex-1">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
-                  $
-                </span>
-                <input
-                  type="number"
-                  value={maxPrice}
-                  onChange={(e) => setMaxPrice(Number(e.target.value))}
-                  min={minPrice}
-                  max={15000}
-                  className="w-full pl-6 pr-2 py-2 text-sm border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-[#b58610] focus:border-transparent"
-                />
-              </div>
-            </div>
-            <div className="flex justify-between text-xs text-gray-500 mt-3">
-              <span>${minPrice}</span>
-              <span>Up to ${maxPrice}</span>
-            </div>
-          </div>
-
+        {/* ✅ زر الفلترة للشاشات الصغيرة */}
+        <div className="md:hidden flex justify-between items-center mb-2">
           <button
-            onClick={clearAllFilters}
-            className="w-full mt-6 py-3 text-sm font-medium text-[#b58610] border-2 border-[#b58610] rounded-lg hover:bg-[#b58610] hover:text-white transition-colors duration-300 uppercase tracking-wider"
+            onClick={() => setOpenFilter(true)}
+            className="px-5 py-3 border-2 border-[#b58610] text-[#b58610] rounded-lg uppercase text-sm font-medium hover:bg-[#b58610] hover:text-white transition-colors duration-300"
           >
-            Clear All Filters
+            <SlidersHorizontal className="w-4 h-4 inline mr-2" />
+            Filters
           </button>
+          <span className="text-sm text-gray-400">
+            {filterArtworks.length} results
+          </span>
         </div>
 
-      
-        <div className="flex-1 border-2 border-gray-200 shadow-xl rounded-2xl p-6">
+        {/* ✅ السايد بار للشاشات الكبيرة */}
+        <div className="hidden md:flex md:w-1/4">
+          <FilterSidebar
+            selectedCategories={selectedCategories}
+            setSelectedCategories={setSelectedCategories}
+            selectedAvailability={selectedAvailability}
+            setSelectedAvailability={setSelectedAvailability}
+            minPrice={minPrice}
+            setMinPrice={setMinPrice}
+            maxPrice={maxPrice}
+            setMaxPrice={setMaxPrice}
+            clearAllFilters={clearAllFilters}
+          />
+        </div>
+
+        {/* ✅ Overlay للشاشات الصغيرة (Drawer) */}
+        {openFilter && (
+          <div className="fixed inset-0 z-50 md:hidden">
+            {/* الخلفية السوداء الشفافة */}
+            <div
+              onClick={() => setOpenFilter(false)}
+              className="absolute inset-0 bg-black/50"
+            />
+
+            {/* المحتوى الأبيض المنزلق من اليسار */}
+            <div
+              className="
+                absolute
+                left-0
+                top-0
+                h-full
+                w-[85%]
+                max-w-sm
+                bg-white
+                shadow-2xl
+                p-5
+                overflow-y-auto
+              "
+            >
+              {/* رأس الـ Drawer */}
+              <div className="flex justify-between items-center mb-5">
+                <h2 className="text-xl font-semibold">Filters</h2>
+                <button
+                  onClick={() => setOpenFilter(false)}
+                  className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
+                >
+                  <X className="w-5 h-5 text-gray-500" />
+                </button>
+              </div>
+
+              {/* محتوى الفلترة */}
+              <FilterSidebar
+                selectedCategories={selectedCategories}
+                setSelectedCategories={setSelectedCategories}
+                selectedAvailability={selectedAvailability}
+                setSelectedAvailability={setSelectedAvailability}
+                minPrice={minPrice}
+                setMinPrice={setMinPrice}
+                maxPrice={maxPrice}
+                setMaxPrice={setMaxPrice}
+                clearAllFilters={clearAllFilters}
+              />
+
+              {/* زر تطبيق الفلاتر (يغلق الـ Drawer) */}
+              <button
+                onClick={() => setOpenFilter(false)}
+                className="w-full mt-6 py-3 text-sm font-medium text-white bg-[#b58610] rounded-lg hover:bg-[#a0740e] transition-colors duration-300 uppercase tracking-wider"
+              >
+                Apply Filters
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ✅ عرض الأعمال الفنية */}
+        <div className="flex-1 border-2 border-gray-200 shadow-xl rounded-2xl p-6 min-h-[500px]">
           {loading ? (
-          
             <div className="flex flex-col items-center justify-center h-96">
               <div className="w-16 h-16 border-4 border-gray-200 border-t-[#b58610] rounded-full animate-spin"></div>
               <p className="mt-4 text-gray-500 text-sm">Loading artworks...</p>
@@ -209,7 +209,6 @@ const Page = () => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filterArtworks.length === 0 ? (
-              
                 <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
                   <div className="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center mb-6">
                     <Search className="w-10 h-10 text-gray-300" />
@@ -232,7 +231,6 @@ const Page = () => {
                   )}
                 </div>
               ) : (
-             
                 filterArtworks.map((artwork) => (
                   <div
                     key={artwork.id}
