@@ -4,6 +4,7 @@ import { Search, SlidersHorizontal, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/app/lib/supabase";
 import { FilterSidebar } from "@/components/Shop/FilterSidebar";
+import Link from "next/link";
 
 type Artwork = {
   id: string;
@@ -52,9 +53,9 @@ const Page = () => {
   }, []);
 
   const filterArtworks = artworks.filter((artwork) => {
-    const matchesSearch = artwork.title
-      .toLowerCase()
-      .includes(search.toLowerCase());
+    const matchesSearch = artwork.title.toLowerCase().includes(
+      search.toLowerCase(),
+    );
     const matchesCategory =
       selectedCategories.length === 0 ||
       selectedCategories.includes(artwork.medium);
@@ -64,10 +65,11 @@ const Page = () => {
     } else if (selectedAvailability === "Sold") {
       matchesAvailability = artwork.is_sold;
     }
-    const matchesPrice =
-      artwork.price >= minPrice && artwork.price <= maxPrice;
+    const matchesPrice = artwork.price >= minPrice && artwork.price <= maxPrice;
 
-    return matchesSearch && matchesCategory && matchesAvailability && matchesPrice;
+    return (
+      matchesSearch && matchesCategory && matchesAvailability && matchesPrice
+    );
   });
 
   const clearAllFilters = () => {
@@ -79,7 +81,6 @@ const Page = () => {
 
   return (
     <div className="w-full min-h-screen px-4 sm:px-8 lg:px-23 pt-10 md:pt-24 lg:pt-28 flex flex-col">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 w-full">
         <div className="text-center sm:text-left">
           <p className="uppercase text-[#b58610] text-xs sm:text-sm tracking-widest font-medium">
@@ -109,9 +110,7 @@ const Page = () => {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="w-full flex-1 pt-8 pb-5 flex flex-col md:flex-row gap-6">
-        {/* ✅ زر الفلترة للشاشات الصغيرة */}
         <div className="md:hidden flex justify-between items-center mb-2">
           <button
             onClick={() => setOpenFilter(true)}
@@ -125,7 +124,6 @@ const Page = () => {
           </span>
         </div>
 
-        {/* ✅ السايد بار للشاشات الكبيرة */}
         <div className="hidden md:flex md:w-1/4">
           <FilterSidebar
             selectedCategories={selectedCategories}
@@ -140,16 +138,13 @@ const Page = () => {
           />
         </div>
 
-        {/* ✅ Overlay للشاشات الصغيرة (Drawer) */}
         {openFilter && (
           <div className="fixed inset-0 z-50 md:hidden">
-            {/* الخلفية السوداء الشفافة */}
             <div
               onClick={() => setOpenFilter(false)}
               className="absolute inset-0 bg-black/50"
             />
 
-            {/* المحتوى الأبيض المنزلق من اليسار */}
             <div
               className="
                 absolute
@@ -164,7 +159,6 @@ const Page = () => {
                 overflow-y-auto
               "
             >
-              {/* رأس الـ Drawer */}
               <div className="flex justify-between items-center mb-5">
                 <h2 className="text-xl font-semibold">Filters</h2>
                 <button
@@ -175,7 +169,6 @@ const Page = () => {
                 </button>
               </div>
 
-              {/* محتوى الفلترة */}
               <FilterSidebar
                 selectedCategories={selectedCategories}
                 setSelectedCategories={setSelectedCategories}
@@ -188,7 +181,6 @@ const Page = () => {
                 clearAllFilters={clearAllFilters}
               />
 
-              {/* زر تطبيق الفلاتر (يغلق الـ Drawer) */}
               <button
                 onClick={() => setOpenFilter(false)}
                 className="w-full mt-6 py-3 text-sm font-medium text-white bg-[#b58610] rounded-lg hover:bg-[#a0740e] transition-colors duration-300 uppercase tracking-wider"
@@ -199,7 +191,6 @@ const Page = () => {
           </div>
         )}
 
-        {/* ✅ عرض الأعمال الفنية */}
         <div className="flex-1 border-2 border-gray-200 shadow-xl rounded-2xl p-6 min-h-[500px]">
           {loading ? (
             <div className="flex flex-col items-center justify-center h-96">
@@ -232,7 +223,8 @@ const Page = () => {
                 </div>
               ) : (
                 filterArtworks.map((artwork) => (
-                  <div
+                  <Link
+                    href={`/shop/${artwork.id}`}
                     key={artwork.id}
                     className="group border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition duration-300"
                   >
@@ -270,7 +262,7 @@ const Page = () => {
                         {artwork.medium}
                       </p>
                     </div>
-                  </div>
+                  </Link>
                 ))
               )}
             </div>
