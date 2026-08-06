@@ -1,22 +1,16 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import {
-  Search,
-  User,
-  Heart,
-  ShoppingBag,
-  Menu,
-  X,
-  Globe,
-} from "lucide-react";
+import { User, ShoppingBag, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useCart } from "@/app/context/CartContext";
+import LoginModal from "./LoginModal";
 
 export const Header = () => {
   const { cart, totalItems, removeFromCart } = useCart();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
 
   const navLinks = [
     { href: "/shop", label: "SHOP" },
@@ -49,7 +43,7 @@ export const Header = () => {
 
   const totalPrice = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
-    0
+    0,
   );
 
   return (
@@ -67,7 +61,6 @@ export const Header = () => {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
-      
             <Link href="/" className="flex-shrink-0 group">
               <div className='font-["Cormorant_Garamond"] text-xl md:text-2xl lg:text-3xl font-bold text-gray-900'>
                 NANA HASHIM
@@ -77,7 +70,6 @@ export const Header = () => {
               </div>
             </Link>
 
-          
             <nav className="hidden md:flex items-center gap-1 lg:gap-2">
               {navLinks.map(({ href, label }) => (
                 <Link
@@ -97,15 +89,16 @@ export const Header = () => {
               ))}
             </nav>
 
-      
             <div className="flex items-center gap-1 sm:gap-2">
               {icons.map(({ Icon, label }, index) => {
                 const isCart = label === "Cart";
+                const isUser = label === "User";
                 return (
                   <button
                     key={index}
                     onClick={() => {
                       if (isCart) setIsCartOpen(true);
+                      if (isUser) setIsLoginOpen(true);
                     }}
                     className="p-2 rounded-full hover:bg-gray-100/80 transition-colors duration-300 text-gray-600 hover:text-gray-900 relative"
                     aria-label={label}
@@ -120,7 +113,6 @@ export const Header = () => {
                 );
               })}
 
-            
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="md:hidden p-2 rounded-full hover:bg-gray-100/80 transition-colors duration-300"
@@ -136,7 +128,6 @@ export const Header = () => {
           </div>
         </div>
 
-      
         <div
           className={`
             md:hidden absolute top-full left-0 right-0
@@ -169,6 +160,8 @@ export const Header = () => {
           </nav>
         </div>
       </header>
+
+      <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
 
       {isCartOpen && (
         <div
@@ -246,3 +239,5 @@ export const Header = () => {
     </>
   );
 };
+
+export default Header;
