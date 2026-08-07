@@ -213,5 +213,17 @@
     "status": "Status",
     "status_available": "Available",
     "status_sold": "Sold"
+  },
+    "login": {
+    "title": "Admin Login",
+    "subtitle": "Sign in to access the admin dashboard",
+    "email": "Email Address",
+    "password": "Password",
+    "sign_in": "Sign In",
+    "signing_in": "Signing in...",
+    "error_fill_fields": "Please fill in all fields",
+    "error_invalid_credentials": "Invalid email or password.",
+    "error_general": "Something went wrong. Please try again.",
+    "back_to_shop": "Back to Shop"
   }
 }

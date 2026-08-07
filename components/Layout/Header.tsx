@@ -21,7 +21,6 @@ export const Header = () => {
   const navLinks = [
     { href: "/shop", label: "header.shop" },
     { href: "/about", label: "header.about" },
-    { href: "/contact", label: "header.contact" },
   ];
 
   const icons = [

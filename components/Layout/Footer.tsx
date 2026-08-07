@@ -17,7 +17,6 @@ const Footer = () => {
       links: [
         { href: "/shop", label: t("footer.shopAll") },
         { href: "/about", label: t("footer.aboutArtist") },
-        { href: "/contact", label: t("footer.contact") },
       ],
     },
   ];
