@@ -1,0 +1,31 @@
+{
+  "header": {
+    "shop": "SHOP",
+    "about": "ABOUT",
+    "contact": "CONTACT",
+    "brand": "NANA HASHIM",
+    "subBrand": "Nana Hashim Abusenenh"
+  },
+
+  "cart": {
+    "title": "Your Cart",
+    "empty": "Your cart is empty",
+    "total": "Total",
+    "remove": "Remove",
+    "viewCart": "View Cart"
+  },
+
+  "common": {
+    "openMenu": "Open Menu",
+    "closeMenu": "Close Menu",
+    "language": "Language"
+  },
+  
+  "featured": {
+    "recentlyFinished": "Recently Finished",
+    "title": "Featured Paintings",
+    "description": "A rotating selection of recent paintings, each built entirely by hand from concept to final brushstroke.",
+    "viewDetails": "View Details"
+  }
+}
+  
