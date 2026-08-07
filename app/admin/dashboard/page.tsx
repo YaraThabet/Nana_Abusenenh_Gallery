@@ -1,33 +1,35 @@
-// app/admin/dashboard/page.tsx
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/app/lib/supabase";
-import { 
-  Package, 
-  ShoppingBag, 
-  CheckCircle, 
+import {
+  Package,
+  ShoppingBag,
+  CheckCircle,
   ArrowLeft,
   LogOut,
   Plus,
   Edit,
   Trash2,
-  X,
   AlertCircle,
   MapPin,
   Phone,
   Loader2,
-  Upload,
-  Image as ImageIcon
 } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
+import { useLanguage } from "@/app/context/LanguageContext";
+import { ArtworkForm } from "@/components/ArtworkForm";
+ import { ImageIcon } from "lucide-react";
+// <--- استيراد المكون الجديد
 
 type Artwork = {
   id: string;
   title: string;
+  title_ar: string | null;
   description: string | null;
+  description_ar: string | null;
   medium: string | null;
+  medium_ar: string | null;
   price: number;
   image_url: string | null;
   is_available: boolean;
@@ -40,23 +42,25 @@ type Order = {
   id: number;
   created_at: string;
   name: string;
+  name_ar: string | null;
   email: string;
   phone: string | null;
   address: string | null;
+  address_ar: string | null;
   items: any;
   total_price: number;
-  status: 'pending' | 'confirmed' | 'completed';
+  status: "pending" | "confirmed" | "completed";
 };
 
 const AdminDashboard = () => {
+  const { t, language } = useLanguage();
   const router = useRouter();
-  
- 
+
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [artworks, setArtworks] = useState<Artwork[]>([]);
-  
+
   // Modal states
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -64,21 +68,24 @@ const AdminDashboard = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  
+
   // Loading states
   const [isConfirming, setIsConfirming] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  
+
   // File input ref
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+
   // Form state
   const [formData, setFormData] = useState({
     title: "",
+    title_ar: "",
     price: "",
     description: "",
+    description_ar: "",
     medium: "",
+    medium_ar: "",
     image_url: "",
     is_available: true,
   });
@@ -86,11 +93,13 @@ const AdminDashboard = () => {
   // ============================================
   // التحقق من حالة تسجيل الدخول
   // ============================================
-  
+
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
       if (!session) {
         router.push("/");
         return;
@@ -107,30 +116,26 @@ const AdminDashboard = () => {
   // ============================================
   // جلب البيانات
   // ============================================
-  
+
   const fetchData = async () => {
     try {
-
-      const ordersResponse = await fetch('/api/orders');
+      const ordersResponse = await fetch("/api/orders");
       if (ordersResponse.ok) {
         const ordersData = await ordersResponse.json();
         setOrders(ordersData.orders || []);
       }
 
-      // جلب الأعمال الفنية
       const { data: artworksData, error: artworksError } = await supabase
-        .from('artworks')
-        .select('*')
-        .order('created_at', { ascending: false });
+        .from("artworks")
+        .select("*")
+        .order("created_at", { ascending: false });
 
       if (artworksError) throw artworksError;
       setArtworks(artworksData || []);
-
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
-
 
   const openConfirmModal = (order: Order) => {
     setSelectedOrder(order);
@@ -140,287 +145,242 @@ const AdminDashboard = () => {
   // ============================================
   // تأكيد الطلب - تنفيذ التأكيد
   // ============================================
-  
+
   const confirmOrder = async () => {
     if (!selectedOrder) return;
-
     setIsConfirming(true);
-
     try {
-      // استخراج artworkId من items
       let artworkId = null;
       if (selectedOrder.items) {
-        const items = typeof selectedOrder.items === 'string' 
-          ? JSON.parse(selectedOrder.items) 
-          : selectedOrder.items;
+        const items =
+          typeof selectedOrder.items === "string"
+            ? JSON.parse(selectedOrder.items)
+            : selectedOrder.items;
         if (items && items.length > 0 && items[0].id) {
           artworkId = items[0].id;
         }
       }
 
-      const response = await fetch('/api/orders', {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const response = await fetch("/api/orders", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           orderId: selectedOrder.id,
-          status: 'confirmed',
+          status: "confirmed",
           artworkId: artworkId,
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to confirm order');
+        throw new Error(errorData.error || t("common.error_confirm_order"));
       }
 
       setShowConfirmModal(false);
       setSelectedOrder(null);
       await fetchData();
-
     } catch (error) {
       console.error("Error confirming order:", error);
-      alert(error instanceof Error ? error.message : "Error confirming order. Please try again.");
+      alert(
+        error instanceof Error
+          ? error.message
+          : t("common.error_confirm_order"),
+      );
     } finally {
       setIsConfirming(false);
     }
   };
 
-  // ============================================
-  // فتح نافذة حذف العمل الفني
-  // ============================================
-  
   const openDeleteModal = (artwork: Artwork) => {
     setSelectedArtwork(artwork);
     setShowDeleteModal(true);
   };
 
-  // ============================================
-  // حذف عمل فني - تنفيذ الحذف
-  // ============================================
-  
   const handleDeleteArtwork = async () => {
     if (!selectedArtwork) return;
-
     setIsDeleting(true);
-
     try {
       const { error } = await supabase
-        .from('artworks')
+        .from("artworks")
         .delete()
-        .eq('id', selectedArtwork.id);
-
+        .eq("id", selectedArtwork.id);
       if (error) throw error;
-
       setShowDeleteModal(false);
       setSelectedArtwork(null);
       await fetchData();
-
     } catch (error) {
       console.error("Error deleting artwork:", error);
-      alert("Error deleting artwork. Please try again.");
+      alert(t("common.error_delete_artwork"));
     } finally {
       setIsDeleting(false);
     }
   };
 
-  // ============================================
-  // رفع الصورة إلى Supabase Storage
-  // ============================================
-  
   const uploadImage = async (file: File) => {
     try {
       setIsUploading(true);
-
-      // إنشاء اسم فريد للصورة
-      const fileExt = file.name.split('.').pop();
+      const fileExt = file.name.split(".").pop();
       const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
       const filePath = `artworks/${fileName}`;
 
-      // رفع الصورة إلى Supabase Storage
-      const { data, error } = await supabase.storage
-        .from('artworks')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: false,
-        });
-
+      const { error } = await supabase.storage
+        .from("artworks")
+        .upload(filePath, file, { cacheControl: "3600", upsert: false });
       if (error) throw error;
 
-      // الحصول على الرابط العام للصورة
-      const { data: { publicUrl } } = supabase.storage
-        .from('artworks')
-        .getPublicUrl(filePath);
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("artworks").getPublicUrl(filePath);
 
-      // تحديث formData بالرابط
-      setFormData(prev => ({
-        ...prev,
-        image_url: publicUrl
-      }));
-
+      setFormData((prev) => ({ ...prev, image_url: publicUrl }));
       setIsUploading(false);
       return publicUrl;
-
     } catch (error) {
       console.error("Error uploading image:", error);
-      alert("Error uploading image. Please try again.");
+      alert(t("common.error_upload_image"));
       setIsUploading(false);
       return null;
     }
   };
 
-  // ============================================
-  // معالج اختيار الصورة
-  // ============================================
-  
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    // التحقق من نوع الملف
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp', 'image/gif'];
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/jpg",
+      "image/webp",
+      "image/gif",
+    ];
     if (!allowedTypes.includes(file.type)) {
-      alert('Please select a valid image file (JPEG, PNG, WEBP, GIF)');
+      alert(t("common.error_invalid_file"));
       return;
     }
-
-    // التحقق من حجم الملف (حد أقصى 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      alert('Image size should be less than 5MB');
+      alert(t("common.error_file_size"));
       return;
     }
-
     uploadImage(file);
   };
 
-  // ============================================
-  // إضافة عمل فني جديد
-  // ============================================
-  
   const handleAddArtwork = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const { data, error } = await supabase
-        .from('artworks')
+        .from("artworks")
         .insert([
           {
             title: formData.title,
+            title_ar: formData.title_ar || null,
             price: Number(formData.price),
             description: formData.description || null,
+            description_ar: formData.description_ar || null,
             medium: formData.medium || null,
+            medium_ar: formData.medium_ar || null,
             image_url: formData.image_url || null,
             is_available: true,
             is_sold: false,
-          }
+          },
         ])
         .select()
         .single();
 
       if (error) throw error;
-
       setShowAddModal(false);
       setFormData({
         title: "",
+        title_ar: "",
         price: "",
         description: "",
+        description_ar: "",
         medium: "",
+        medium_ar: "",
         image_url: "",
         is_available: true,
       });
       await fetchData();
-
     } catch (error) {
       console.error("Error adding artwork:", error);
-      alert("Error adding artwork. Please try again.");
+      alert(t("common.error_add_artwork"));
     }
   };
 
-  // ============================================
-  // تعديل عمل فني
-  // ============================================
-  
   const handleEditArtwork = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedArtwork) return;
-
     try {
       const { data, error } = await supabase
-        .from('artworks')
+        .from("artworks")
         .update({
           title: formData.title,
+          title_ar: formData.title_ar || null,
           price: Number(formData.price),
           description: formData.description || null,
+          description_ar: formData.description_ar || null,
           medium: formData.medium || null,
+          medium_ar: formData.medium_ar || null,
           image_url: formData.image_url || null,
           is_available: formData.is_available,
           is_sold: !formData.is_available,
         })
-        .eq('id', selectedArtwork.id)
+        .eq("id", selectedArtwork.id)
         .select()
         .single();
 
       if (error) throw error;
-
       setShowEditModal(false);
       setSelectedArtwork(null);
       setFormData({
         title: "",
+        title_ar: "",
         price: "",
         description: "",
+        description_ar: "",
         medium: "",
+        medium_ar: "",
         image_url: "",
         is_available: true,
       });
       await fetchData();
-
     } catch (error) {
       console.error("Error updating artwork:", error);
-      alert("Error updating artwork. Please try again.");
+      alert(t("common.error_update_artwork"));
     }
   };
 
-  // ============================================
-  // فتح نافذة التعديل
-  // ============================================
-  
   const openEditModal = (artwork: Artwork) => {
     setSelectedArtwork(artwork);
     setFormData({
       title: artwork.title,
+      title_ar: artwork.title_ar || "",
       price: artwork.price.toString(),
       description: artwork.description || "",
+      description_ar: artwork.description_ar || "",
       medium: artwork.medium || "",
+      medium_ar: artwork.medium_ar || "",
       image_url: artwork.image_url || "",
       is_available: artwork.is_available,
     });
     setShowEditModal(true);
   };
 
-  // ============================================
-  // تسجيل الخروج
-  // ============================================
-  
   const handleLogout = async () => {
     await supabase.auth.signOut();
     router.push("/");
   };
 
-  // ============================================
-  // حساب الإحصائيات
-  // ============================================
-  
   const totalArtworks = artworks.length;
-  const availableArtworks = artworks.filter(a => a.is_available).length;
-  const soldArtworks = artworks.filter(a => a.is_sold).length;
-  const pendingOrders = orders.filter(o => o.status === 'pending').length;
+  const availableArtworks = artworks.filter((a) => a.is_available).length;
+  const soldArtworks = artworks.filter((a) => a.is_sold).length;
+  const pendingOrders = orders.filter((o) => o.status === "pending").length;
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#b58610] mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading dashboard...</p>
+          <p className="mt-4 text-gray-600">{t("dashboard.loading")}</p>
         </div>
       </div>
     );
@@ -432,16 +392,18 @@ const AdminDashboard = () => {
         {/* Header */}
         <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-4">
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="p-2 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
             >
               <ArrowLeft className="w-5 h-5 text-gray-600" />
             </Link>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+              <h1 className="text-2xl font-bold text-gray-900">
+                {t("dashboard.title")}
+              </h1>
               <p className="text-sm text-gray-500">
-                Welcome back, {user?.email}
+                {t("dashboard.welcome_back")}
               </p>
             </div>
           </div>
@@ -450,63 +412,25 @@ const AdminDashboard = () => {
             className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors duration-200"
           >
             <LogOut className="w-4 h-4" />
-            Sign Out
+            {t("dashboard.sign_out")}
           </button>
         </div>
 
-        {/* Statistics Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500 font-medium">Total Orders</p>
-                <p className="text-3xl font-bold text-gray-900 mt-1">{orders.length}</p>
-              </div>
-              <div className="p-3 bg-blue-50 rounded-lg">
-                <Package className="w-6 h-6 text-blue-600" />
-              </div>
-            </div>
-          </div>
+     
 
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500 font-medium">Total Artworks</p>
-                <p className="text-3xl font-bold text-gray-900 mt-1">{totalArtworks}</p>
-              </div>
-              <div className="p-3 bg-purple-50 rounded-lg">
-                <ShoppingBag className="w-6 h-6 text-purple-600" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-500 font-medium">Available</p>
-                <p className="text-3xl font-bold text-green-600 mt-1">{availableArtworks}</p>
-              </div>
-              <div className="p-3 bg-green-50 rounded-lg">
-                <CheckCircle className="w-6 h-6 text-green-600" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ==========================================
-            Orders Section - طلبات الانتظار فقط
-            ========================================== */}
+        {/* ========================================== Orders Section ========================================== */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-8 overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">Pending Orders</h2>
+            <h2 className="text-lg font-semibold text-gray-900">
+              {t("orders.title")}
+            </h2>
             <span className="px-3 py-1 bg-amber-50 text-amber-600 text-sm font-medium rounded-full">
-              {pendingOrders} pending
+              {pendingOrders} {t("orders.pending")}
             </span>
           </div>
-
           {pendingOrders === 0 ? (
             <div className="p-8 text-center text-gray-500">
-              No pending orders
+              {t("orders.no_orders")}
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -514,55 +438,69 @@ const AdminDashboard = () => {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Customer
+                      {t("orders.table.customer")}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Artwork
+                      {t("orders.table.artwork")}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Qty
+                      {t("orders.table.qty")}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Phone
+                      {t("orders.table.phone")}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Location
+                      {t("orders.table.location")}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Total
+                      {t("orders.table.total")}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Date
+                      {t("orders.table.date")}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Action
+                      {t("orders.table.action")}
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {orders
-                    .filter(order => order.status === 'pending')
+                    .filter((order) => order.status === "pending")
                     .map((order) => {
-                      // استخراج معلومات اللوحة من items
-                      let artworkTitle = 'Unknown';
+                      let artworkTitle = t("common.unknown");
                       let quantity = 1;
                       try {
-                        const items = typeof order.items === 'string' 
-                          ? JSON.parse(order.items) 
-                          : order.items;
+                        const items =
+                          typeof order.items === "string"
+                            ? JSON.parse(order.items)
+                            : order.items;
                         if (items && items.length > 0) {
-                          artworkTitle = items[0].title || 'Unknown';
+                          artworkTitle = items[0].title || t("common.unknown");
                           quantity = items[0].quantity || 1;
                         }
                       } catch (e) {
-                        artworkTitle = 'Unknown';
+                        artworkTitle = t("common.unknown");
                       }
-
+                      const customerName =
+                        language === "ar" && order.name_ar
+                          ? order.name_ar
+                          : order.name;
+                      const customerAddress =
+                        language === "ar" && order.address_ar
+                          ? order.address_ar
+                          : order.address;
                       return (
-                        <tr key={order.id} className="hover:bg-gray-50 transition-colors">
+                        <tr
+                          key={order.id}
+                          className="hover:bg-gray-50 transition-colors"
+                        >
                           <td className="px-6 py-4">
-                            <div className="text-sm text-gray-900">{order.name}</div>
-                            <div className="text-xs text-gray-500">{order.email}</div>
+                            <div className="text-sm text-gray-900">
+                              {customerName}
+                            </div>
+                            <div className="text-xs text-gray-500">
+                              {order.email}
+                            </div>
                           </td>
                           <td className="px-6 py-4 text-sm text-gray-900">
                             {artworkTitle}
@@ -574,7 +512,7 @@ const AdminDashboard = () => {
                             <div className="flex items-center gap-1.5">
                               <Phone className="w-3.5 h-3.5 text-gray-400" />
                               <span className="text-sm text-gray-900">
-                                {order.phone || 'No phone'}
+                                {order.phone || t("common.no_phone")}
                               </span>
                             </div>
                           </td>
@@ -582,7 +520,7 @@ const AdminDashboard = () => {
                             <div className="flex items-center gap-1.5">
                               <MapPin className="w-3.5 h-3.5 text-gray-400" />
                               <span className="text-sm text-gray-900">
-                                {order.address || 'No address'}
+                                {customerAddress || t("common.no_address")}
                               </span>
                             </div>
                           </td>
@@ -598,7 +536,7 @@ const AdminDashboard = () => {
                               className="px-4 py-2 bg-[#b58610] text-white text-sm rounded-lg hover:bg-[#a0740e] transition-colors duration-200 flex items-center gap-2"
                             >
                               <CheckCircle className="w-4 h-4" />
-                              Complete
+                              {t("orders.complete")}
                             </button>
                           </td>
                         </tr>
@@ -610,24 +548,23 @@ const AdminDashboard = () => {
           )}
         </div>
 
-        {/* ==========================================
-            Artworks Section
-            ========================================== */}
+        {/* ========================================== Artworks Section ========================================== */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">Artworks</h2>
+            <h2 className="text-lg font-semibold text-gray-900">
+              {t("artworks.title")}
+            </h2>
             <button
               onClick={() => setShowAddModal(true)}
               className="px-4 py-2 bg-[#b58610] text-white text-sm rounded-lg hover:bg-[#a0740e] transition-colors duration-200 flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
-              Add Artwork
+              {t("artworks.add")}
             </button>
           </div>
-
           {artworks.length === 0 ? (
             <div className="p-8 text-center text-gray-500">
-              No artworks added yet
+              {t("artworks.no_artworks")}
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -635,79 +572,92 @@ const AdminDashboard = () => {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Image
+                      {t("artworks.table.image")}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Title
+                      {t("artworks.table.title")}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Medium
+                      {t("artworks.table.medium")}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Price
+                      {t("artworks.table.price")}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
+                      {t("artworks.table.status")}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
+                      {t("common.actions")}
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {artworks.map((artwork) => (
-                    <tr key={artwork.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4">
-                        <div className="w-12 h-12 relative rounded-lg overflow-hidden bg-gray-100">
-                          {artwork.image_url ? (
-                            <img
-                              src={artwork.image_url}
-                              alt={artwork.title}
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                              <ImageIcon className="w-6 h-6 text-gray-400" />
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-900">
-                        {artwork.title}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">
-                        {artwork.medium || '-'}
-                      </td>
-                      <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                        ${artwork.price.toLocaleString()}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`px-3 py-1 text-xs font-medium rounded-full ${
-                          artwork.is_available 
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-red-100 text-red-700'
-                        }`}>
-                          {artwork.is_sold ? 'Sold' : 'Available'}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => openEditModal(artwork)}
-                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                  {artworks.map((artwork) => {
+                    const displayTitle =
+                      language === "ar" && artwork.title_ar
+                        ? artwork.title_ar
+                        : artwork.title;
+                    const displayMedium =
+                      language === "ar" && artwork.medium_ar
+                        ? artwork.medium_ar
+                        : artwork.medium || "-";
+                    return (
+                      <tr
+                        key={artwork.id}
+                        className="hover:bg-gray-50 transition-colors"
+                      >
+                        <td className="px-6 py-4">
+                          <div className="w-12 h-12 relative rounded-lg overflow-hidden bg-gray-100">
+                            {artwork.image_url ? (
+                              <img
+                                src={artwork.image_url}
+                                alt={artwork.title}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center">
+                                <ImageIcon className="w-6 h-6 text-gray-400" />
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-900">
+                          {displayTitle}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">
+                          {displayMedium}
+                        </td>
+                        <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                          ${artwork.price.toLocaleString()}
+                        </td>
+                        <td className="px-6 py-4">
+                          <span
+                            className={`px-3 py-1 text-xs font-medium rounded-full ${artwork.is_available ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
                           >
-                            <Edit className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => openDeleteModal(artwork)}
-                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                            {artwork.is_sold
+                              ? t("artworks.status.sold")
+                              : t("artworks.status.available")}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => openEditModal(artwork)}
+                              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => openDeleteModal(artwork)}
+                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -715,9 +665,34 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* ==========================================
-          Confirm Order Modal
-          ========================================== */}
+      {/* ========================================== استخدام المكون الجديد ========================================== */}
+      {showAddModal && (
+        <ArtworkForm
+          formData={formData}
+          setFormData={setFormData}
+          isUploading={isUploading}
+          isEditMode={false}
+          onImageSelect={handleImageSelect}
+          onSubmit={handleAddArtwork}
+          onClose={() => setShowAddModal(false)}
+          t={t}
+        />
+      )}
+
+      {showEditModal && (
+        <ArtworkForm
+          formData={formData}
+          setFormData={setFormData}
+          isUploading={isUploading}
+          isEditMode={true}
+          onImageSelect={handleImageSelect}
+          onSubmit={handleEditArtwork}
+          onClose={() => setShowEditModal(false)}
+          t={t}
+        />
+      )}
+
+      {/* ========================================== Confirm Order Modal ========================================== */}
       {showConfirmModal && selectedOrder && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
@@ -725,56 +700,75 @@ const AdminDashboard = () => {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-amber-50 rounded-full mb-4">
                 <AlertCircle className="w-8 h-8 text-amber-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">Confirm Order</h2>
+              <h2 className="text-xl font-bold text-gray-900">
+                {t("modals.confirm_order.title")}
+              </h2>
               <p className="text-gray-500 text-sm mt-2">
-                Are you sure you want to confirm this order?
+                {t("modals.confirm_order.message")}
               </p>
             </div>
-
             <div className="bg-gray-50 rounded-lg p-4 mb-6 space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Customer:</span>
-                <span className="text-gray-900 font-medium">{selectedOrder.name}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Email:</span>
-                <span className="text-gray-900 font-medium">{selectedOrder.email}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Phone:</span>
+                <span className="text-gray-500">
+                  {t("orders.table.customer")}:
+                </span>
                 <span className="text-gray-900 font-medium">
-                  {selectedOrder.phone || 'No phone provided'}
+                  {language === "ar" && selectedOrder.name_ar
+                    ? selectedOrder.name_ar
+                    : selectedOrder.name}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Artwork:</span>
+                <span className="text-gray-500">Email:</span>
+                <span className="text-gray-900 font-medium">
+                  {selectedOrder.email}
+                </span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-500">
+                  {t("orders.table.phone")}:
+                </span>
+                <span className="text-gray-900 font-medium">
+                  {selectedOrder.phone || t("common.no_phone")}
+                </span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-500">
+                  {t("orders.table.artwork")}:
+                </span>
                 <span className="text-gray-900 font-medium">
                   {(() => {
                     try {
-                      const items = typeof selectedOrder.items === 'string' 
-                        ? JSON.parse(selectedOrder.items) 
-                        : selectedOrder.items;
-                      return items?.[0]?.title || 'Unknown';
+                      const items =
+                        typeof selectedOrder.items === "string"
+                          ? JSON.parse(selectedOrder.items)
+                          : selectedOrder.items;
+                      return items?.[0]?.title || t("common.unknown");
                     } catch (e) {
-                      return 'Unknown';
+                      return t("common.unknown");
                     }
                   })()}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Location:</span>
+                <span className="text-gray-500">
+                  {t("orders.table.location")}:
+                </span>
                 <span className="text-gray-900 font-medium">
-                  {selectedOrder.address || 'No address provided'}
+                  {language === "ar" && selectedOrder.address_ar
+                    ? selectedOrder.address_ar
+                    : selectedOrder.address || t("common.no_address")}
                 </span>
               </div>
               <div className="flex justify-between text-sm pt-2 border-t border-gray-200">
-                <span className="text-gray-500 font-medium">Total:</span>
+                <span className="text-gray-500 font-medium">
+                  {t("orders.table.total")}:
+                </span>
                 <span className="text-gray-900 font-bold">
                   ${selectedOrder.total_price.toLocaleString()}
                 </span>
               </div>
             </div>
-
             <div className="flex gap-3">
               <button
                 onClick={() => {
@@ -784,7 +778,7 @@ const AdminDashboard = () => {
                 disabled={isConfirming}
                 className="flex-1 px-4 py-2.5 border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Cancel
+                {t("common.cancel")}
               </button>
               <button
                 onClick={confirmOrder}
@@ -794,12 +788,12 @@ const AdminDashboard = () => {
                 {isConfirming ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Confirming...
+                    {t("modals.confirm_order.confirming")}
                   </>
                 ) : (
                   <>
                     <CheckCircle className="w-4 h-4" />
-                    Confirm
+                    {t("common.confirm")}
                   </>
                 )}
               </button>
@@ -808,9 +802,7 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* ==========================================
-          Delete Artwork Modal
-          ========================================== */}
+      {/* ========================================== Delete Artwork Modal ========================================== */}
       {showDeleteModal && selectedArtwork && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
@@ -818,15 +810,16 @@ const AdminDashboard = () => {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-red-50 rounded-full mb-4">
                 <Trash2 className="w-8 h-8 text-red-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">Delete Artwork</h2>
+              <h2 className="text-xl font-bold text-gray-900">
+                {t("modals.delete_artwork.title")}
+              </h2>
               <p className="text-gray-500 text-sm mt-2">
-                Are you sure you want to delete this artwork?
+                {t("modals.delete_artwork.message")}
               </p>
               <p className="text-gray-400 text-xs mt-1">
-                This action cannot be undone.
+                {t("modals.delete_artwork.warning")}
               </p>
             </div>
-
             <div className="bg-gray-50 rounded-lg p-4 mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
@@ -844,7 +837,9 @@ const AdminDashboard = () => {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-900">
-                    {selectedArtwork.title}
+                    {language === "ar" && selectedArtwork.title_ar
+                      ? selectedArtwork.title_ar
+                      : selectedArtwork.title}
                   </p>
                   <p className="text-xs text-gray-500">
                     ${selectedArtwork.price.toLocaleString()}
@@ -852,7 +847,6 @@ const AdminDashboard = () => {
                 </div>
               </div>
             </div>
-
             <div className="flex gap-3">
               <button
                 onClick={() => {
@@ -862,7 +856,7 @@ const AdminDashboard = () => {
                 disabled={isDeleting}
                 className="flex-1 px-4 py-2.5 border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Cancel
+                {t("common.cancel")}
               </button>
               <button
                 onClick={handleDeleteArtwork}
@@ -872,317 +866,16 @@ const AdminDashboard = () => {
                 {isDeleting ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Deleting...
+                    {t("modals.delete_artwork.deleting")}
                   </>
                 ) : (
                   <>
                     <Trash2 className="w-4 h-4" />
-                    Delete
+                    {t("common.delete")}
                   </>
                 )}
               </button>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* ==========================================
-          Add Artwork Modal
-          ========================================== */}
-      {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-gray-900">Add New Artwork</h2>
-              <button
-                onClick={() => setShowAddModal(false)}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleAddArtwork} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Title *
-                </label>
-                <input
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData({...formData, title: e.target.value})}
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#b58610]/20 focus:border-[#b58610] outline-none"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Price *
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={formData.price}
-                  onChange={(e) => setFormData({...formData, price: e.target.value})}
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#b58610]/20 focus:border-[#b58610] outline-none"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Medium
-                </label>
-                <input
-                  type="text"
-                  value={formData.medium}
-                  onChange={(e) => setFormData({...formData, medium: e.target.value})}
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#b58610]/20 focus:border-[#b58610] outline-none"
-                  placeholder="e.g., Oil on Canvas"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Description
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
-                  rows={3}
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#b58610]/20 focus:border-[#b58610] outline-none resize-none"
-                />
-              </div>
-
-              {/* Image Upload */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Image
-                </label>
-                <div className="flex items-center gap-4">
-                  {/* Preview */}
-                  {formData.image_url && (
-                    <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                      <img
-                        src={formData.image_url}
-                        alt="Preview"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
-                  
-                  {/* Upload Button */}
-                  <div className="flex-1">
-                    <input
-                      type="file"
-                      ref={fileInputRef}
-                      onChange={handleImageSelect}
-                      accept="image/*"
-                      className="hidden"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      disabled={isUploading}
-                      className="w-full px-4 py-2.5 border-2 border-dashed border-gray-300 rounded-lg hover:border-[#b58610] transition-colors duration-200 flex items-center justify-center gap-2 text-gray-600 hover:text-[#b58610] disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {isUploading ? (
-                        <>
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                          Uploading...
-                        </>
-                      ) : formData.image_url ? (
-                        <>
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          Change Image
-                        </>
-                      ) : (
-                        <>
-                          <Upload className="w-4 h-4" />
-                          Upload Image
-                        </>
-                      )}
-                    </button>
-                    {formData.image_url && (
-                      <p className="text-xs text-gray-400 mt-1 truncate">
-                        {formData.image_url.split('/').pop()}
-                      </p>
-                    )}
-                    <p className="text-xs text-gray-400 mt-1">
-                      Max 5MB · JPG, PNG, WEBP, GIF
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                disabled={isUploading}
-                className="w-full py-3 bg-[#b58610] text-white rounded-lg hover:bg-[#a0740e] transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Add Artwork
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* ==========================================
-          Edit Artwork Modal
-          ========================================== */}
-      {showEditModal && selectedArtwork && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-gray-900">Edit Artwork</h2>
-              <button
-                onClick={() => setShowEditModal(false)}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleEditArtwork} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Title *
-                </label>
-                <input
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData({...formData, title: e.target.value})}
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#b58610]/20 focus:border-[#b58610] outline-none"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Price *
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={formData.price}
-                  onChange={(e) => setFormData({...formData, price: e.target.value})}
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#b58610]/20 focus:border-[#b58610] outline-none"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Medium
-                </label>
-                <input
-                  type="text"
-                  value={formData.medium}
-                  onChange={(e) => setFormData({...formData, medium: e.target.value})}
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#b58610]/20 focus:border-[#b58610] outline-none"
-                  placeholder="e.g., Oil on Canvas"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Description
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
-                  rows={3}
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#b58610]/20 focus:border-[#b58610] outline-none resize-none"
-                />
-              </div>
-
-              {/* Image Upload */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Image
-                </label>
-                <div className="flex items-center gap-4">
-                  {/* Preview */}
-                  {formData.image_url && (
-                    <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                      <img
-                        src={formData.image_url}
-                        alt="Preview"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
-                  
-                  {/* Upload Button */}
-                  <div className="flex-1">
-                    <input
-                      type="file"
-                      ref={fileInputRef}
-                      onChange={handleImageSelect}
-                      accept="image/*"
-                      className="hidden"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      disabled={isUploading}
-                      className="w-full px-4 py-2.5 border-2 border-dashed border-gray-300 rounded-lg hover:border-[#b58610] transition-colors duration-200 flex items-center justify-center gap-2 text-gray-600 hover:text-[#b58610] disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {isUploading ? (
-                        <>
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                          Uploading...
-                        </>
-                      ) : formData.image_url ? (
-                        <>
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          Change Image
-                        </>
-                      ) : (
-                        <>
-                          <Upload className="w-4 h-4" />
-                          Upload Image
-                        </>
-                      )}
-                    </button>
-                    {formData.image_url && (
-                      <p className="text-xs text-gray-400 mt-1 truncate">
-                        {formData.image_url.split('/').pop()}
-                      </p>
-                    )}
-                    <p className="text-xs text-gray-400 mt-1">
-                      Max 5MB · JPG, PNG, WEBP, GIF
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Status
-                </label>
-                <select
-                  value={formData.is_available ? "available" : "sold"}
-                  onChange={(e) => setFormData({
-                    ...formData, 
-                    is_available: e.target.value === "available"
-                  })}
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#b58610]/20 focus:border-[#b58610] outline-none"
-                >
-                  <option value="available">Available</option>
-                  <option value="sold">Sold</option>
-                </select>
-              </div>
-
-              <button
-                type="submit"
-                disabled={isUploading}
-                className="w-full py-3 bg-[#b58610] text-white rounded-lg hover:bg-[#a0740e] transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Update Artwork
-              </button>
-            </form>
           </div>
         </div>
       )}

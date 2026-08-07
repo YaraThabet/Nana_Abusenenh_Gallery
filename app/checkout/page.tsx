@@ -3,11 +3,13 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/app/context/CartContext";
+import { useLanguage } from "@/app/context/LanguageContext";
 import { ArrowLeft, CheckCircle, XCircle } from "lucide-react";
 import Link from "next/link";
 
 const CheckoutPage = () => {
   const router = useRouter();
+  const { language, t } = useLanguage();
   const { cart, clearCart } = useCart();
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState<{
@@ -16,7 +18,8 @@ const CheckoutPage = () => {
   }>({ type: null, message: "" });
 
   const [formData, setFormData] = useState({
-    name: "",
+    nameAr: "",      // ✅ الاسم بالعربية
+    nameEn: "",      // ✅ الاسم بالإنجليزية
     email: "",
     phone: "",
     address: "",
@@ -39,7 +42,9 @@ const CheckoutPage = () => {
     setNotification({ type: null, message: "" });
 
     const orderData = {
-      name: formData.name,
+      nameAr: formData.nameAr,
+      nameEn: formData.nameEn,
+      name: formData.nameAr || formData.nameEn, // للتوافق مع الخلفية
       email: formData.email,
       phone: formData.phone,
       address: formData.address,
@@ -67,70 +72,107 @@ const CheckoutPage = () => {
       if (response.ok) {
         setNotification({
           type: "success",
-          message: "✅ Order placed successfully! We will contact you soon.",
+          message: language === 'ar' 
+            ? "✅ تم تقديم الطلب بنجاح! سنتواصل معك قريباً."
+            : "✅ Order placed successfully! We will contact you soon.",
         });
       } else {
         setNotification({
           type: "error",
-          message: result.error || "Something went wrong. Please try again.",
+          message: result.error || (language === 'ar' 
+            ? "حدث خطأ ما. يرجى المحاولة مرة أخرى."
+            : "Something went wrong. Please try again."),
         });
       }
     } catch (error) {
       console.error("Error placing order:", error);
       setNotification({
         type: "error",
-        message: "Network error. Please check your connection and try again.",
+        message: language === 'ar'
+          ? "خطأ في الشبكة. يرجى التحقق من اتصالك والمحاولة مرة أخرى."
+          : "Network error. Please check your connection and try again.",
       });
     } finally {
       setLoading(false);
     }
   };
+
+  // ✅ إذا كانت السلة فارغة
   if (cart.length === 0 && notification.type !== "success") {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-4">
-        <h2 className="text-2xl font-bold mb-4">Your cart is empty</h2>
+      <div 
+        className="min-h-screen flex flex-col items-center justify-center px-4"
+        dir={language === 'ar' ? 'rtl' : 'ltr'}
+      >
+        <h2 className="text-2xl font-bold mb-4">{t("checkout.emptyCart")}</h2>
         <Link href="/shop" className="text-[#b58610] hover:underline">
-          Continue Shopping
+          {t("checkout.continueShopping")}
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen px-4 sm:px-8 lg:px-23 pt-24 md:pt-28 pb-16">
+    <div 
+      className="min-h-screen px-4 sm:px-8 lg:px-23 pt-24 md:pt-28 pb-16"
+      dir={language === 'ar' ? 'rtl' : 'ltr'}
+    >
+      {/* ✅ زر العودة */}
       <button
         onClick={() => router.back()}
-        className="flex items-center gap-2 text-gray-600 hover:text-[#b58610] transition-colors duration-300 mb-6"
+        className={`flex items-center gap-2 text-gray-600 hover:text-[#b58610] transition-colors duration-300 mb-6 ${
+          language === 'ar' ? 'flex-row-reverse' : ''
+        }`}
       >
-        <ArrowLeft className="w-5 h-5" />
-        Back
+        <ArrowLeft className={`w-5 h-5 ${language === 'ar' ? 'rotate-180' : ''}`} />
+        {t("checkout.back")}
       </button>
 
       <h1 className="text-3xl font-bold font-['Cormorant_Garamond'] mb-8">
-        Checkout
+        {t("checkout.title")}
       </h1>
 
       <div className="flex flex-col lg:flex-row gap-10">
+        {/* ✅ نموذج الدفع */}
         <div className="flex-1">
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* ✅ حقل الاسم بالعربية */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Full Name *
+                {t("checkout.fullNameAr")} *
               </label>
               <input
                 type="text"
-                name="name"
+                name="nameAr"
                 required
-                value={formData.name}
+                value={formData.nameAr}
                 onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#b58610] focus:border-transparent outline-none"
-                placeholder="John Doe"
+                placeholder={t("checkout.fullNameArPlaceholder")}
+                dir="rtl"
+              />
+            </div>
+
+            {/* ✅ حقل الاسم بالإنجليزية */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {t("checkout.fullNameEn")} *
+              </label>
+              <input
+                type="text"
+                name="nameEn"
+                required
+                value={formData.nameEn}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#b58610] focus:border-transparent outline-none"
+                placeholder={t("checkout.fullNameEnPlaceholder")}
+                dir="ltr"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email *
+                {t("checkout.email")} *
               </label>
               <input
                 type="email"
@@ -140,12 +182,13 @@ const CheckoutPage = () => {
                 onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#b58610] focus:border-transparent outline-none"
                 placeholder="john@example.com"
+                dir="ltr"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Phone Number *
+                {t("checkout.phone")} *
               </label>
               <input
                 type="tel"
@@ -154,13 +197,14 @@ const CheckoutPage = () => {
                 value={formData.phone}
                 onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#b58610] focus:border-transparent outline-none"
-                placeholder="+970 59 123 4567"
+                placeholder={language === 'ar' ? '+970 59 123 4567' : '+970 59 123 4567'}
+                dir="ltr"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Address *
+                {t("checkout.address")} *
               </label>
               <textarea
                 name="address"
@@ -169,7 +213,8 @@ const CheckoutPage = () => {
                 onChange={handleChange}
                 rows={3}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#b58610] focus:border-transparent outline-none resize-none"
-                placeholder="123 Main St, City, Country"
+                placeholder={language === 'ar' ? 'رام الله، فلسطين' : '123 Main St, City, Country'}
+                dir={language === 'ar' ? 'rtl' : 'ltr'}
               />
             </div>
 
@@ -182,13 +227,14 @@ const CheckoutPage = () => {
                   : "bg-[#b58610] hover:bg-[#a0740e] text-white"
               }`}
             >
-              {loading ? "Processing..." : "Place Order"}
+              {loading ? t("checkout.processing") : t("checkout.placeOrder")}
             </button>
           </form>
         </div>
 
+        {/* ✅ ملخص الطلب */}
         <div className="lg:w-1/3 bg-gray-50 rounded-2xl p-6 h-fit">
-          <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+          <h2 className="text-xl font-semibold mb-4">{t("checkout.orderSummary")}</h2>
           <div className="space-y-3">
             {cart.map((item) => (
               <div key={item.id} className="flex justify-between text-sm">
@@ -201,13 +247,14 @@ const CheckoutPage = () => {
           </div>
           <div className="border-t border-gray-200 mt-4 pt-4">
             <div className="flex justify-between font-semibold text-lg">
-              <span>Total</span>
+              <span>{t("checkout.total")}</span>
               <span>${totalPrice.toLocaleString()}</span>
             </div>
           </div>
         </div>
       </div>
 
+      {/* ✅ الإشعار */}
       {notification.type && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/50 backdrop-blur-sm">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 text-center">
@@ -217,7 +264,9 @@ const CheckoutPage = () => {
               <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
             )}
             <h3 className="text-xl font-semibold mb-2">
-              {notification.type === "success" ? "Order Placed! 🎉" : "Error"}
+              {notification.type === "success" 
+                ? t("checkout.orderPlaced") 
+                : t("checkout.error")}
             </h3>
             <p className="text-gray-600 text-sm mb-6">{notification.message}</p>
             <button
@@ -229,8 +278,8 @@ const CheckoutPage = () => {
               className="px-6 py-2 bg-[#b58610] text-white rounded-lg hover:bg-[#a0740e] transition-colors duration-300"
             >
               {notification.type === "success"
-                ? "Continue Shopping"
-                : "Try Again"}
+                ? t("checkout.continueShopping")
+                : t("checkout.tryAgain")}
             </button>
           </div>
         </div>

@@ -1,31 +1,217 @@
 {
   "header": {
-    "shop": "SHOP",
-    "about": "ABOUT",
-    "contact": "CONTACT",
-    "brand": "NANA HASHIM",
-    "subBrand": "Nana Hashim Abusenenh"
-  },
-
-  "cart": {
-    "title": "Your Cart",
-    "empty": "Your cart is empty",
-    "total": "Total",
-    "remove": "Remove",
-    "viewCart": "View Cart"
-  },
-
-  "common": {
-    "openMenu": "Open Menu",
-    "closeMenu": "Close Menu",
+    "shop": "Shop",
+    "about": "About",
+    "contact": "Contact",
+    "brand": "Nana Hashem",
+    "subBrand": "Nana Hashem Abu Seneineh",
     "language": "Language"
   },
-  
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "remove": "Remove",
+    "total": "Total",
+    "viewCart": "View Cart"
+  },
+  "common": {
+    "language": "Change Language",
+    "english": "English",
+    "arabic": "العربية",
+    "close": "Close",
+    "openMenu": "Open Menu",
+    "closeMenu": "Close Menu",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "actions": "Actions",
+    "loading": "Loading...",
+    "unknown": "Unknown",
+    "no_phone": "No phone",
+    "no_address": "No address"
+  },
   "featured": {
-    "recentlyFinished": "Recently Finished",
+    "badge": "Latest Works",
     "title": "Featured Paintings",
-    "description": "A rotating selection of recent paintings, each built entirely by hand from concept to final brushstroke.",
-    "viewDetails": "View Details"
+    "description": "A curated collection of modern paintings, each one handcrafted entirely from concept to final stroke.",
+    "viewDetails": "View Details",
+    "altText": "Original painting by artist Nana Hashem Abu Seneineh"
+  },
+  "collections": {
+    "badge": "Collections by Theme",
+    "title": "Collections",
+    "description": "Artworks brought together by shared medium, texture, and mood — a gateway to discovering the collection.",
+    "explore": "Explore"
+  },
+  "aboutGallery": {
+    "quote": "I don't paint what I see — I paint what I feel.",
+    "badge": "The Artist",
+    "title": "Painting Since Childhood",
+    "paragraph1": "Art has always been my first language. Long before I had the words to express what I felt, I had colors, lines, and the patience of a blank canvas waiting to become something special. I started painting as a child — not because I was taught, but because I couldn't stop.",
+    "paragraph2": "My works have found their way into the homes of local collectors, and I am proud that pieces I created out of passion now hang on walls beyond my own world. For me, art is not just a career choice — it is the most honest thing I know how to do.",
+    "stats": {
+      "years": "Years of Practice",
+      "works": "Original Works",
+      "since": "Independent Since"
+    },
+    "button": "Read Her Story"
+  },
+  "testimonials": {
+    "quotePart1": "I don't paint the world as it is,",
+    "quotePart2": "— I paint it as I feel it.",
+    "name": "Nana Hashem Abu Seneineh",
+    "role": "Visual Artist · Painter · Creator",
+    "description": "Follow the creative process, studio updates, and new works in real-time on Instagram.",
+    "button": "Follow me on Instagram"
+  },
+  "footer": {
+    "discover": "Discover",
+    "account": "Account",
+    "shopAll": "All Products",
+    "aboutArtist": "About the Artist",
+    "contact": "Contact Us",
+    "signIn": "Sign In",
+    "createAccount": "Create Account",
+    "wishlist": "Wishlist",
+    "cart": "Cart",
+    "description": "Original paintings by artist Nana Hashem Abu Seneineh — a self-taught visual artist working with acrylics, plaster, and mixed media, based in Palestine.",
+    "instagramLabel": "Nana Hashem Abu Seneineh on Instagram",
+    "copyright": "Nana Hashem Abu Seneineh. All rights reserved.",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfSale": "Terms of Sale"
+  },
+  "shop": {
+    "badge": "Full Collection",
+    "title": "Shop Original Paintings",
+    "searchPlaceholder": "Search for paintings...",
+    "filters": "Filters",
+    "results": "Results",
+    "applyFilters": "Apply Filters",
+    "loading": "Loading paintings...",
+    "noResults": "No paintings found",
+    "noResultsSearch": "No paintings matched \"{search}\". Try searching for something else.",
+    "startTyping": "Start typing to search for paintings.",
+    "clearSearch": "Clear Search",
+    "sold": "Sold",
+    "available": "Available",
+    "reserved": "Reserved"
+  },
+  "filter": {
+    "category": "Category",
+    "availability": "Availability",
+    "price": "Price",
+    "minPrice": "Min Price",
+    "maxPrice": "Max Price",
+    "clearAll": "Clear All Filters"
+  },
+  "product": {
+    "backToShop": "Back to Shop",
+    "addToCart": "Add to Cart",
+    "soldOut": "Sold Out",
+    "medium": "Medium",
+    "status": "Status",
+    "sold": "Sold",
+    "available": "Available",
+    "reserved": "Reserved",
+    "notFound": "Artwork not found",
+    "goBack": "Go Back"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "back": "Back",
+    "emptyCart": "Your cart is empty",
+    "continueShopping": "Continue Shopping",
+    "fullNameAr": "Full Name (Arabic)",
+    "fullNameArPlaceholder": "Mohammed Ahmed",
+    "fullNameEn": "Full Name (English)",
+    "fullNameEnPlaceholder": "Mohammed Ahmed",
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "address": "Address",
+    "processing": "Processing...",
+    "placeOrder": "Place Order",
+    "orderSummary": "Order Summary",
+    "total": "Total",
+    "orderPlaced": "Order Placed! 🎉",
+    "error": "Error",
+    "tryAgain": "Try Again"
+  },
+  "dashboard": {
+    "title": "Admin Dashboard",
+    "welcome_back": "Welcome back",
+    "sign_out": "Sign Out",
+    "loading": "Loading dashboard..."
+  },
+  "stats": {
+    "total_orders": "Total Orders",
+    "total_artworks": "Total Artworks",
+    "available": "Available"
+  },
+  "orders": {
+    "title": "Pending Orders",
+    "no_orders": "No pending orders",
+    "complete": "Complete",
+    "table": {
+      "customer": "Customer",
+      "artwork": "Artwork",
+      "qty": "Qty",
+      "phone": "Phone",
+      "location": "Location",
+      "total": "Total",
+      "date": "Date"
+    }
+  },
+  "artworks": {
+    "title": "Artworks",
+    "add": "Add Artwork",
+    "no_artworks": "No artworks added yet",
+    "status": {
+      "sold": "Sold",
+      "available": "Available"
+    },
+    "table": {
+      "image": "Image",
+      "title": "Title",
+      "medium": "Medium",
+      "price": "Price",
+      "status": "Status"
+    }
+  },
+  "modals": {
+    "confirm_order": {
+      "title": "Confirm Order",
+      "message": "Are you sure you want to confirm this order?",
+      "confirming": "Confirming..."
+    },
+    "delete_artwork": {
+      "title": "Delete Artwork",
+      "message": "Are you sure you want to delete this artwork?",
+      "warning": "This action cannot be undone.",
+      "deleting": "Deleting..."
+    },
+    "add_artwork": {
+      "title": "Add New Artwork"
+    },
+    "edit_artwork": {
+      "title": "Edit Artwork"
+    }
+  },
+  "forms": {
+    "title": "Title *",
+    "price": "Price *",
+    "medium": "Medium",
+    "medium_placeholder": "e.g., Oil on Canvas",
+    "description": "Description",
+    "image": "Image",
+    "upload": "Upload Image",
+    "change_image": "Change Image",
+    "uploading": "Uploading...",
+    "image_hint": "Max 5MB · JPG, PNG, WEBP, GIF",
+    "submit_add": "Add Artwork",
+    "submit_update": "Update Artwork",
+    "status": "Status",
+    "status_available": "Available",
+    "status_sold": "Sold"
   }
 }
-  
