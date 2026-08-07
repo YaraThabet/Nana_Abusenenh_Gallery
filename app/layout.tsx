@@ -21,6 +21,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Nana Hashim Art Gallery",
   description: "Original paintings by Nana Hashim Abusenenh",
+  icons: {
+    icon: "/logo.jpg",
+  },
 };
 
 export default function RootLayout({
