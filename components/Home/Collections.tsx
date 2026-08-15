@@ -39,22 +39,30 @@ const Collections = () => {
   const { language, t } = useLanguage();
 
   return (
-    <div className="flex flex-col w-full min-h-screen items-center pt-10 sm:pt-15 px-4 sm:px-6 lg:px-8 pb-16">
+    <div className="flex flex-col w-full min-h-screen items-center pt-14 sm:pt-20 pb-20 bg-[#d7d4cf] px-4 sm:px-6 lg:px-8">
+      {/* ================= HEADER ================= */}
       <div className="max-w-4xl text-center space-y-3 sm:space-y-5">
-        <p className="uppercase text-[#b58610] text-xs sm:text-sm tracking-widest font-medium">
+        {/* Small Label - تم تغيير اللون والمسافات */}
+        <p className="uppercase text-[#80624A] text-[10px] sm:text-xs tracking-[0.3em] font-medium">
           {t("collections.badge")}
         </p>
 
-        <h1 className='uppercase font-bold font-["Cormorant_Garamond"] text-3xl sm:text-4xl md:text-5xl'>
+        {/* Title - تم تغيير اللون */}
+        <h1 className='uppercase font-["Cormorant_Garamond"] font-semibold text-[#65452E] text-3xl sm:text-4xl md:text-5xl tracking-wide'>
           {t("collections.title")}
         </h1>
 
-        <p className="text-gray-500 text-sm sm:text-base pt-1 sm:pt-2 max-w-2xl mx-auto px-4">
+        {/* Decorative Line - خط زخرفي جديد */}
+        <div className="mx-auto h-px w-12 bg-[#65452E] opacity-70" />
+
+        {/* Description - تم تغيير اللون */}
+        <p className="text-[#80624A] text-sm sm:text-base pt-1 sm:pt-2 max-w-2xl mx-auto px-4 leading-7">
           {t("collections.description")}
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 pt-8 sm:pt-12 w-full max-w-6xl px-2 sm:px-0">
+      {/* ================= COLLECTIONS CARDS ================= */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 pt-10 sm:pt-14 w-full max-w-6xl px-2 sm:px-0">
         {collections.map((collection) => {
           const title =
             language === "ar" ? collection.title_ar : collection.title;
@@ -68,54 +76,58 @@ const Collections = () => {
             <div
               key={collection.id}
               className="
-              group relative rounded-2xl overflow-hidden
-              shadow-md hover:shadow-2xl
-              transition-all duration-500
-              h-56 sm:h-64 md:h-72 cursor-pointer
+                group relative rounded-2xl overflow-hidden
+                shadow-md hover:shadow-2xl
+                transition-all duration-500
+                h-56 sm:h-64 md:h-72 cursor-pointer
               "
             >
+              {/* الصورة */}
               <img
                 src={collection.image}
                 alt={title}
                 className="
-                absolute inset-0 w-full h-full
-                object-cover
-                group-hover:scale-110
-                transition-transform duration-700
+                  absolute inset-0 w-full h-full
+                  object-cover
+                  group-hover:scale-110
+                  transition-transform duration-700
                 "
               />
 
+              {/* التراكب الأساسي - تم تغيير اللون إلى بني داكن */}
               <div
                 className="
-                absolute inset-0
-                bg-black/40
-                group-hover:bg-black/30
-                transition-all duration-300
-              "
+                  absolute inset-0
+                  bg-[#4F3523]/30
+                  group-hover:bg-[#4F3523]/40
+                  transition-all duration-300
+                "
               />
 
+              {/* التراكب المتدرج - تم تغيير اللون */}
               <div
                 className="
-                absolute inset-0
-                bg-gradient-to-t
-                from-black/60
-                via-transparent
-                to-transparent
-                opacity-0
-                group-hover:opacity-100
-                transition-opacity duration-500
-              "
+                  absolute inset-0
+                  bg-gradient-to-t
+                  from-[#65452E]/70
+                  via-transparent
+                  to-transparent
+                  opacity-0
+                  group-hover:opacity-100
+                  transition-opacity duration-500
+                "
               />
 
+              {/* المحتوى */}
               <div
                 className="
-                absolute inset-0
-                flex flex-col
-                items-center justify-center
-                text-white
-                p-4 sm:p-6
-                text-center
-              "
+                  absolute inset-0
+                  flex flex-col
+                  items-center justify-center
+                  text-white
+                  p-4 sm:p-6
+                  text-center
+                "
               >
                 <h3 className='font-["Cormorant_Garamond"] text-2xl sm:text-3xl md:text-4xl font-bold mb-1 sm:mb-2'>
                   {title}
@@ -125,21 +137,22 @@ const Collections = () => {
                   {description}
                 </p>
 
+                {/* الزر - تم تغيير الألوان لتطابق الثانية */}
                 <button
                   className="
-                  mt-3 sm:mt-4
-                  bg-white/20
-                  backdrop-blur-sm
-                  text-white
-                  px-4 sm:px-6
-                  py-1.5 sm:py-2
-                  rounded-full
-                  text-xs sm:text-sm
-                  hover:bg-white
-                  hover:text-black
-                  transition-all duration-300
-                  border border-white/30
-                  hover:border-transparent
+                    mt-3 sm:mt-4
+                    bg-white/20
+                    backdrop-blur-sm
+                    text-white
+                    px-4 sm:px-6
+                    py-1.5 sm:py-2
+                    rounded-full
+                    text-xs sm:text-sm
+                    hover:bg-[#F7F3EC]
+                    hover:text-[#65452E]
+                    transition-all duration-300
+                    border border-[#E5D9CA]
+                    hover:border-transparent
                   "
                 >
                   {t("collections.explore")}

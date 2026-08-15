@@ -3,11 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/app/lib/supabase";
 import {
-  Package,
-  ShoppingBag,
   CheckCircle,
-  ArrowLeft,
-  LogOut,
   Plus,
   Edit,
   Trash2,
@@ -15,12 +11,11 @@ import {
   MapPin,
   Phone,
   Loader2,
+  ImageIcon,
+  ShoppingBag
 } from "lucide-react";
-import Link from "next/link";
 import { useLanguage } from "@/app/context/LanguageContext";
 import { ArtworkForm } from "@/components/ArtworkForm";
- import { ImageIcon } from "lucide-react";
-// <--- استيراد المكون الجديد
 
 type Artwork = {
   id: string;
@@ -377,93 +372,96 @@ const AdminDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-[#F7F3EC]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#b58610] mx-auto"></div>
-          <p className="mt-4 text-gray-600">{t("dashboard.loading")}</p>
+          <p className="mt-4 text-[#4F3523]/70">{t("dashboard.loading")}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 pt-30 sm:px-8 lg:px-12">
+    <div className="min-h-screen bg-[#F7F3EC] py-8 px-4 pt-30 sm:px-8 lg:px-12">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-          <div className="flex items-center gap-4">
-            <Link
-              href="/"
-              className="p-2 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
-            >
-              <ArrowLeft className="w-5 h-5 text-gray-600" />
-            </Link>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                {t("dashboard.title")}
-              </h1>
-              <p className="text-sm text-gray-500">
-                {t("dashboard.welcome_back")}
-              </p>
-            </div>
+        
+        {/* ==========================================
+            عبارة ترحيبية فاخرة
+            ========================================== */}
+        <div className="mb-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-serif font-bold text-[#4F3523] tracking-tight">
+              {t("dashboard.title")}
+            </h1>
+            <p className="text-[#4F3523]/70 mt-2 text-lg">
+              {t("dashboard.welcome_back")}
+            </p>
           </div>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors duration-200"
+            className="flex items-center gap-2 px-6 py-3 bg-[#FAF8F5] border border-[#E5D9CA] text-[#4F3523] rounded-xl hover:bg-[#E5D9CA] hover:border-[#b58610] transition-all duration-200 shadow-sm"
           >
-            <LogOut className="w-4 h-4" />
-            {t("dashboard.sign_out")}
+            <span className="font-medium">{t("dashboard.sign_out")}</span>
           </button>
         </div>
 
-     
-
         {/* ========================================== Orders Section ========================================== */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-8 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">
-              {t("orders.title")}
-            </h2>
-            <span className="px-3 py-1 bg-amber-50 text-amber-600 text-sm font-medium rounded-full">
+        <div className="bg-[#FAF8F5] rounded-2xl shadow-lg border border-[#E5D9CA] mb-12 overflow-hidden shadow-[#4F3523]/10">
+          <div className="px-8 py-6 border-b border-[#E5D9CA] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-[#F7F3EC]/50">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-[#E5D9CA] rounded-lg">
+                <ShoppingBag className="w-5 h-5 text-[#b58610]" />
+              </div>
+              <h2 className="text-xl font-bold text-[#4F3523]">
+                {t("orders.title")}
+              </h2>
+            </div>
+            <span className="px-4 py-1.5 bg-[#E5D9CA] text-[#4F3523] border border-[#d7d4cf] text-sm font-medium rounded-full inline-flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#b58610] animate-pulse"></span>
               {pendingOrders} {t("orders.pending")}
             </span>
           </div>
+          
           {pendingOrders === 0 ? (
-            <div className="p-8 text-center text-gray-500">
-              {t("orders.no_orders")}
+            <div className="p-16 text-center">
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-[#E5D9CA] rounded-full mb-4">
+                <CheckCircle className="w-10 h-10 text-[#b58610]" />
+              </div>
+              <h3 className="text-xl font-medium text-[#4F3523] mb-1">{t("orders.no_orders")}</h3>
+              <p className="text-[#4F3523]/70">Everything is running smoothly.</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50">
+                <thead className="bg-[#F7F3EC]/80">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-8 py-4 text-left text-xs font-semibold text-[#4F3523]/70 uppercase tracking-wider">
                       {t("orders.table.customer")}
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-8 py-4 text-left text-xs font-semibold text-[#4F3523]/70 uppercase tracking-wider">
                       {t("orders.table.artwork")}
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-8 py-4 text-left text-xs font-semibold text-[#4F3523]/70 uppercase tracking-wider">
                       {t("orders.table.qty")}
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-8 py-4 text-left text-xs font-semibold text-[#4F3523]/70 uppercase tracking-wider">
                       {t("orders.table.phone")}
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-8 py-4 text-left text-xs font-semibold text-[#4F3523]/70 uppercase tracking-wider">
                       {t("orders.table.location")}
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-8 py-4 text-left text-xs font-semibold text-[#4F3523]/70 uppercase tracking-wider">
                       {t("orders.table.total")}
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-8 py-4 text-left text-xs font-semibold text-[#4F3523]/70 uppercase tracking-wider">
                       {t("orders.table.date")}
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-8 py-4 text-left text-xs font-semibold text-[#4F3523]/70 uppercase tracking-wider">
                       {t("orders.table.action")}
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-[#E5D9CA]">
                   {orders
                     .filter((order) => order.status === "pending")
                     .map((order) => {
@@ -492,48 +490,50 @@ const AdminDashboard = () => {
                       return (
                         <tr
                           key={order.id}
-                          className="hover:bg-gray-50 transition-colors"
+                          className="hover:bg-[#E5D9CA]/30 transition-colors group"
                         >
-                          <td className="px-6 py-4">
-                            <div className="text-sm text-gray-900">
+                          <td className="px-8 py-5">
+                            <div className="text-sm font-medium text-[#4F3523]">
                               {customerName}
                             </div>
-                            <div className="text-xs text-gray-500">
+                            <div className="text-xs text-[#4F3523]/60">
                               {order.email}
                             </div>
                           </td>
-                          <td className="px-6 py-4 text-sm text-gray-900">
+                          <td className="px-8 py-5 text-sm text-[#4F3523]">
                             {artworkTitle}
                           </td>
-                          <td className="px-6 py-4 text-sm text-gray-900">
-                            {quantity}
+                          <td className="px-8 py-5 text-sm text-[#4F3523]">
+                            <span className="inline-flex items-center justify-center w-8 h-8 bg-[#E5D9CA] rounded-full text-[#4F3523] font-medium">
+                              {quantity}
+                            </span>
                           </td>
-                          <td className="px-6 py-4">
-                            <div className="flex items-center gap-1.5">
-                              <Phone className="w-3.5 h-3.5 text-gray-400" />
-                              <span className="text-sm text-gray-900">
+                          <td className="px-8 py-5">
+                            <div className="flex items-center gap-2">
+                              <Phone className="w-4 h-4 text-[#4F3523]/70" />
+                              <span className="text-sm text-[#4F3523]">
                                 {order.phone || t("common.no_phone")}
                               </span>
                             </div>
                           </td>
-                          <td className="px-6 py-4">
-                            <div className="flex items-center gap-1.5">
-                              <MapPin className="w-3.5 h-3.5 text-gray-400" />
-                              <span className="text-sm text-gray-900">
+                          <td className="px-8 py-5">
+                            <div className="flex items-start gap-2">
+                              <MapPin className="w-4 h-4 text-[#4F3523]/70 mt-0.5" />
+                              <span className="text-sm text-[#4F3523] max-w-[150px] truncate">
                                 {customerAddress || t("common.no_address")}
                               </span>
                             </div>
                           </td>
-                          <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                          <td className="px-8 py-5 text-sm font-bold text-[#4F3523]">
                             ${order.total_price.toLocaleString()}
                           </td>
-                          <td className="px-6 py-4 text-sm text-gray-500">
+                          <td className="px-8 py-5 text-sm text-[#4F3523]/60">
                             {new Date(order.created_at).toLocaleDateString()}
                           </td>
-                          <td className="px-6 py-4">
+                          <td className="px-8 py-5">
                             <button
                               onClick={() => openConfirmModal(order)}
-                              className="px-4 py-2 bg-[#b58610] text-white text-sm rounded-lg hover:bg-[#a0740e] transition-colors duration-200 flex items-center gap-2"
+                              className="px-4 py-2 bg-[#b58610] text-white text-sm font-medium rounded-xl hover:bg-[#9f760d] transition-colors duration-200 flex items-center gap-2 shadow-sm hover:shadow-md shadow-[#b58610]/20"
                             >
                               <CheckCircle className="w-4 h-4" />
                               {t("orders.complete")}
@@ -548,124 +548,14 @@ const AdminDashboard = () => {
           )}
         </div>
 
-        {/* ========================================== Artworks Section ========================================== */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">
-              {t("artworks.title")}
-            </h2>
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="px-4 py-2 bg-[#b58610] text-white text-sm rounded-lg hover:bg-[#a0740e] transition-colors duration-200 flex items-center gap-2"
-            >
-              <Plus className="w-4 h-4" />
-              {t("artworks.add")}
-            </button>
-          </div>
-          {artworks.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">
-              {t("artworks.no_artworks")}
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      {t("artworks.table.image")}
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      {t("artworks.table.title")}
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      {t("artworks.table.medium")}
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      {t("artworks.table.price")}
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      {t("artworks.table.status")}
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      {t("common.actions")}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {artworks.map((artwork) => {
-                    const displayTitle =
-                      language === "ar" && artwork.title_ar
-                        ? artwork.title_ar
-                        : artwork.title;
-                    const displayMedium =
-                      language === "ar" && artwork.medium_ar
-                        ? artwork.medium_ar
-                        : artwork.medium || "-";
-                    return (
-                      <tr
-                        key={artwork.id}
-                        className="hover:bg-gray-50 transition-colors"
-                      >
-                        <td className="px-6 py-4">
-                          <div className="w-12 h-12 relative rounded-lg overflow-hidden bg-gray-100">
-                            {artwork.image_url ? (
-                              <img
-                                src={artwork.image_url}
-                                alt={artwork.title}
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center">
-                                <ImageIcon className="w-6 h-6 text-gray-400" />
-                              </div>
-                            )}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-900">
-                          {displayTitle}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-500">
-                          {displayMedium}
-                        </td>
-                        <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                          ${artwork.price.toLocaleString()}
-                        </td>
-                        <td className="px-6 py-4">
-                          <span
-                            className={`px-3 py-1 text-xs font-medium rounded-full ${artwork.is_available ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
-                          >
-                            {artwork.is_sold
-                              ? t("artworks.status.sold")
-                              : t("artworks.status.available")}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-2">
-                            <button
-                              onClick={() => openEditModal(artwork)}
-                              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                            >
-                              <Edit className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={() => openDeleteModal(artwork)}
-                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
+        {/* ==========================================
+            ⚠️ تم إخفاء جدول الأعمال الفنية فقط (Artworks Section)
+            الكود الخاص بمنطق الإضافة والتعديل والـ Modals باقي كما هو بالأسفل
+        ========================================== */}
+        
       </div>
 
-      {/* ========================================== استخدام المكون الجديد ========================================== */}
+      {/* ========================================== استخدام المكون الجديد (Modals) ========================================== */}
       {showAddModal && (
         <ArtworkForm
           formData={formData}
@@ -694,49 +584,50 @@ const AdminDashboard = () => {
 
       {/* ========================================== Confirm Order Modal ========================================== */}
       {showConfirmModal && selectedOrder && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#4F3523]/80 backdrop-blur-sm">
+          <div className="bg-[#FAF8F5] rounded-2xl shadow-2xl w-full max-w-md p-6 border border-[#E5D9CA]">
             <div className="text-center mb-6">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-amber-50 rounded-full mb-4">
-                <AlertCircle className="w-8 h-8 text-amber-600" />
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-[#E5D9CA] rounded-full mb-4">
+                <AlertCircle className="w-8 h-8 text-[#b58610]" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">
+              <h2 className="text-xl font-bold text-[#4F3523]">
                 {t("modals.confirm_order.title")}
               </h2>
-              <p className="text-gray-500 text-sm mt-2">
+              <p className="text-[#4F3523]/70 text-sm mt-2">
                 {t("modals.confirm_order.message")}
               </p>
             </div>
-            <div className="bg-gray-50 rounded-lg p-4 mb-6 space-y-2">
+
+            <div className="bg-[#F7F3EC] rounded-lg p-4 mb-6 space-y-2 border border-[#E5D9CA]">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">
+                <span className="text-[#4F3523]/70">
                   {t("orders.table.customer")}:
                 </span>
-                <span className="text-gray-900 font-medium">
+                <span className="text-[#4F3523] font-medium">
                   {language === "ar" && selectedOrder.name_ar
                     ? selectedOrder.name_ar
                     : selectedOrder.name}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Email:</span>
-                <span className="text-gray-900 font-medium">
+                <span className="text-[#4F3523]/70">Email:</span>
+                <span className="text-[#4F3523] font-medium">
                   {selectedOrder.email}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">
+                <span className="text-[#4F3523]/70">
                   {t("orders.table.phone")}:
                 </span>
-                <span className="text-gray-900 font-medium">
+                <span className="text-[#4F3523] font-medium">
                   {selectedOrder.phone || t("common.no_phone")}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">
+                <span className="text-[#4F3523]/70">
                   {t("orders.table.artwork")}:
                 </span>
-                <span className="text-gray-900 font-medium">
+                <span className="text-[#4F3523] font-medium">
                   {(() => {
                     try {
                       const items =
@@ -751,24 +642,25 @@ const AdminDashboard = () => {
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">
+                <span className="text-[#4F3523]/70">
                   {t("orders.table.location")}:
                 </span>
-                <span className="text-gray-900 font-medium">
+                <span className="text-[#4F3523] font-medium">
                   {language === "ar" && selectedOrder.address_ar
                     ? selectedOrder.address_ar
                     : selectedOrder.address || t("common.no_address")}
                 </span>
               </div>
-              <div className="flex justify-between text-sm pt-2 border-t border-gray-200">
-                <span className="text-gray-500 font-medium">
+              <div className="flex justify-between text-sm pt-2 border-t border-[#E5D9CA]">
+                <span className="text-[#4F3523]/70 font-medium">
                   {t("orders.table.total")}:
                 </span>
-                <span className="text-gray-900 font-bold">
+                <span className="text-[#4F3523] font-bold">
                   ${selectedOrder.total_price.toLocaleString()}
                 </span>
               </div>
             </div>
+
             <div className="flex gap-3">
               <button
                 onClick={() => {
@@ -776,7 +668,7 @@ const AdminDashboard = () => {
                   setSelectedOrder(null);
                 }}
                 disabled={isConfirming}
-                className="flex-1 px-4 py-2.5 border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-4 py-2.5 border border-[#E5D9CA] text-[#4F3523] rounded-lg hover:bg-[#E5D9CA] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {t("common.cancel")}
               </button>
@@ -804,25 +696,26 @@ const AdminDashboard = () => {
 
       {/* ========================================== Delete Artwork Modal ========================================== */}
       {showDeleteModal && selectedArtwork && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#4F3523]/80 backdrop-blur-sm">
+          <div className="bg-[#FAF8F5] rounded-2xl shadow-2xl w-full max-w-md p-6 border border-[#E5D9CA]">
             <div className="text-center mb-6">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-red-50 rounded-full mb-4">
-                <Trash2 className="w-8 h-8 text-red-600" />
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-[#4F3523]/10 rounded-full mb-4">
+                <Trash2 className="w-8 h-8 text-red-500" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">
+              <h2 className="text-xl font-bold text-[#4F3523]">
                 {t("modals.delete_artwork.title")}
               </h2>
-              <p className="text-gray-500 text-sm mt-2">
+              <p className="text-[#4F3523]/70 text-sm mt-2">
                 {t("modals.delete_artwork.message")}
               </p>
-              <p className="text-gray-400 text-xs mt-1">
+              <p className="text-[#4F3523]/50 text-xs mt-1">
                 {t("modals.delete_artwork.warning")}
               </p>
             </div>
-            <div className="bg-gray-50 rounded-lg p-4 mb-6">
+
+            <div className="bg-[#F7F3EC] rounded-lg p-4 mb-6 border border-[#E5D9CA]">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
+                <div className="w-12 h-12 rounded-lg overflow-hidden bg-[#E5D9CA] flex-shrink-0">
                   {selectedArtwork.image_url ? (
                     <img
                       src={selectedArtwork.image_url}
@@ -831,22 +724,23 @@ const AdminDashboard = () => {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <ImageIcon className="w-6 h-6 text-gray-400" />
+                      <ImageIcon className="w-6 h-6 text-[#4F3523]/50" />
                     </div>
                   )}
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-900">
+                  <p className="text-sm font-medium text-[#4F3523]">
                     {language === "ar" && selectedArtwork.title_ar
                       ? selectedArtwork.title_ar
                       : selectedArtwork.title}
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-[#4F3523]/60">
                     ${selectedArtwork.price.toLocaleString()}
                   </p>
                 </div>
               </div>
             </div>
+
             <div className="flex gap-3">
               <button
                 onClick={() => {
@@ -854,7 +748,7 @@ const AdminDashboard = () => {
                   setSelectedArtwork(null);
                 }}
                 disabled={isDeleting}
-                className="flex-1 px-4 py-2.5 border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-4 py-2.5 border border-[#E5D9CA] text-[#4F3523] rounded-lg hover:bg-[#E5D9CA] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {t("common.cancel")}
               </button>

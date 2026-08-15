@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaInstagram } from "react-icons/fa6";
@@ -24,8 +23,8 @@ const Footer = () => {
   return (
     <footer
       className="
-        bg-black 
-        text-white 
+        bg-[#4F3523] 
+        text-[#d7d4cf] 
         w-full
         flex 
         justify-center
@@ -42,8 +41,8 @@ const Footer = () => {
           py-16
         "
       >
-        {/* Line */}
-        <div className="w-16 h-0.5 bg-[#b58610] mb-12 mx-auto sm:mx-0" />
+        {/* Line - تم تحويله من الذهبي إلى البيج الفاتح */}
+        <div className="w-16 h-0.5 bg-[#E5D9CA] mb-12 mx-auto sm:mx-0" />
 
         <div
           className="
@@ -65,6 +64,7 @@ const Footer = () => {
                 tracking-[0.15em]
                 font-light
                 mb-4
+                text-[#F7F3EC]
               "
             >
               {t("header.brand")}
@@ -73,7 +73,7 @@ const Footer = () => {
             <p
               className="
                 text-sm
-                text-white/50
+                text-[#d7d4cf]/80
                 leading-relaxed
                 max-w-xs
               "
@@ -91,8 +91,8 @@ const Footer = () => {
               <FaInstagram
                 size={18}
                 className="
-                  text-white/50
-                  hover:text-[#b58610]
+                  text-[#d7d4cf]/80
+                  hover:text-[#F7F3EC]
                   transition-colors
                 "
               />
@@ -104,7 +104,7 @@ const Footer = () => {
             <div key={col.title}>
               <p
                 className="
-                  text-white/40
+                  text-[#d7d4cf]/70
                   text-xs
                   uppercase
                   tracking-wider
@@ -121,8 +121,8 @@ const Footer = () => {
                       href={link.href}
                       className="
                         text-sm
-                        text-white/70
-                        hover:text-[#b58610]
+                        text-[#d7d4cf]/90
+                        hover:text-[#F7F3EC]
                         transition-colors
                       "
                     >
@@ -136,7 +136,7 @@ const Footer = () => {
         </div>
 
         {/* Bottom */}
-        <div className="h-0.5 bg-white/10 my-12" />
+        <div className="h-0.5 bg-[#d7d4cf]/20 my-12" />
 
         <div
           className="
@@ -147,7 +147,7 @@ const Footer = () => {
             items-center
             gap-4
             text-xs
-            text-white/40
+            text-[#d7d4cf]/70
             text-center
           "
         >
@@ -158,14 +158,14 @@ const Footer = () => {
           <div className="flex gap-6">
             <Link
               href="/privacy"
-              className="hover:text-[#b58610] transition-colors"
+              className="hover:text-[#F7F3EC] transition-colors"
             >
               {t("footer.privacyPolicy")}
             </Link>
 
             <Link
               href="/terms"
-              className="hover:text-[#b58610] transition-colors"
+              className="hover:text-[#F7F3EC] transition-colors"
             >
               {t("footer.termsOfSale")}
             </Link>

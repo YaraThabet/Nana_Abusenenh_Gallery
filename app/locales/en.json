@@ -1,5 +1,6 @@
 {
   "header": {
+    "home": "Home",
     "shop": "Shop",
     "about": "About",
     "contact": "Contact",
@@ -29,7 +30,14 @@
     "loading": "Loading...",
     "unknown": "Unknown",
     "no_phone": "No phone",
-    "no_address": "No address"
+    "no_address": "No address",
+    "error_confirm_order": "Error confirming order. Please try again.",
+    "error_delete_artwork": "Error deleting artwork. Please try again.",
+    "error_add_artwork": "Error adding artwork. Please try again.",
+    "error_update_artwork": "Error updating artwork. Please try again.",
+    "error_upload_image": "Error uploading image. Please try again.",
+    "error_invalid_file": "Please select a valid image file (JPEG, PNG, WEBP, GIF)",
+    "error_file_size": "Image size should be less than 5MB"
   },
   "featured": {
     "badge": "Latest Works",
@@ -95,7 +103,8 @@
     "clearSearch": "Clear Search",
     "sold": "Sold",
     "available": "Available",
-    "reserved": "Reserved"
+    "reserved": "Reserved",
+    "viewDetails": "View Details"
   },
   "filter": {
     "category": "Category",
@@ -138,6 +147,7 @@
     "tryAgain": "Try Again"
   },
   "dashboard": {
+    "settings": "settings",
     "title": "Admin Dashboard",
     "welcome_back": "Welcome back",
     "sign_out": "Sign Out",
@@ -150,8 +160,9 @@
   },
   "orders": {
     "title": "Pending Orders",
+    "pending": "Pending",
     "no_orders": "No pending orders",
-    "complete": "Complete",
+    "complete": "Complete Order",
     "table": {
       "customer": "Customer",
       "artwork": "Artwork",
@@ -159,7 +170,8 @@
       "phone": "Phone",
       "location": "Location",
       "total": "Total",
-      "date": "Date"
+      "date": "Date",
+      "action": "Action"
     }
   },
   "artworks": {
@@ -214,16 +226,115 @@
     "status_available": "Available",
     "status_sold": "Sold"
   },
-    "login": {
+  "login": {
     "title": "Admin Login",
     "subtitle": "Sign in to access the admin dashboard",
+    "reset_title": "Forgot Password",
+    "reset_subtitle": "Enter your email and we'll send you a reset link",
     "email": "Email Address",
     "password": "Password",
     "sign_in": "Sign In",
     "signing_in": "Signing in...",
+    "forgot_password": "Forgot password?",
+    "send_reset_link": "Send Reset Link",
+    "sending": "Sending...",
+    "reset_success": "Password reset link has been sent to your email. Please check your inbox or folder.",
+    "back_to_login": "Back to Sign In",
     "error_fill_fields": "Please fill in all fields",
     "error_invalid_credentials": "Invalid email or password.",
     "error_general": "Something went wrong. Please try again.",
-    "back_to_shop": "Back to Shop"
+    "back_to_shop": "Back to Shop",
+        "error_rate_limit": "You have exceeded the email sending limit. Please wait a few minutes and try again."
+    
+  },
+  "contactPage": {
+    "badge": "Get in touch",
+    "title": "Let's connect",
+    "description": "For artwork inquiries, collaborations, or any questions, feel free to get in touch.",
+    "phone": "Phone",
+    "phoneDescription": "Call directly",
+    "instagram": "Instagram",
+    "instagramDescription": "Follow on Instagram",
+    "email": "Email",
+    "emailDescription": "Send an email",
+    "backHome": "Back to home"
+  },
+    "admin": {
+    "brand": "Nana Admin",
+    "subtitle": "Art Gallery Management",
+    "main_menu": "MAIN MENU"
+  },
+    "settings": {
+    "title": "Settings",
+    "email_section": "Email Address",
+    "email": "Email Address",
+    "email_verification_note": "Note: Changing your email will require verifying the new address via a confirmation link.",
+    "change_password": "Change Password",
+    "new_password": "New Password",
+    "confirm_password": "Confirm Password",
+    "password_hint": "Password must be at least 6 characters long.",
+    "password_mismatch": "Passwords do not match.",
+    "password_too_short": "Password must be at least 6 characters.",
+    "save_changes": "Save Changes",
+    "saving": "Saving...",
+    "success_message": "Settings updated successfully!",
+    "error_message": "An error occurred while saving settings. Please try again."
+  },
+    "aboutPage": {
+    "backHome": "Back to Home",
+    "hero": {
+      "title": "Visual Artist · Painter · Creative",
+      "location": "Palestine"
+    },
+    "biography": {
+      "badge": "Biography",
+      "title": "The Artist's Journey",
+      "paragraph1": "Art has always been my first language. Long before I had words for what I felt, I had colours, lines, and the quiet patience of a blank canvas waiting to become something. I have been painting since childhood — not because someone taught me to, but because I could not stop.",
+      "paragraph2": "Over the years, I have developed my craft entirely through practice, observation, and an obsessive attention to detail. Every painting I create is an attempt to slow the world down — to capture a feeling, a moment, or a truth that words cannot quite reach. I work across styles and techniques, always exploring, never settling.",
+      "paragraph3": "My work has found its way into the homes of collectors locally, and I am proud that pieces I created purely from passion now live on walls beyond my own. Art, for me, is not a career choice — it is the most honest thing I know how to do.",
+      "quote": "I do not paint what I see — I paint what I feel."
+    },
+    "practice": {
+      "badge": "Practice",
+      "title": "Artistic Practice",
+      "description": "A self-taught journey through painting, drawing, and mixed media.",
+      "item1": "Self-taught visual artist with over a decade of continuous practice in painting and drawing.",
+      "item2": "Specialises in expressive, detail-oriented works that convey emotion, depth, and narrative.",
+      "item3": "Explores a wide range of styles including realism, portraiture, and abstract expression.",
+      "item4": "Works primarily with acrylic, watercolour, and mixed media on canvas and paper.",
+      "item5": "Known for meticulous attention to detail and the ability to translate feelings into visual form."
+    },
+    "experience": {
+      "badge": "Experience",
+      "title": "Selected Experience",
+      "role": "Independent Visual Artist",
+      "org": "Self-Employed, Palestine",
+      "period": "2015 — Present",
+      "point1": "Produced and sold original paintings to private collectors across Palestine.",
+      "point2": "Built an engaged online audience through Instagram (@nana.artist1), showcasing original works and creative process.",
+      "point3": "Managed all aspects of artistic production independently — from concept and creation to presentation and sale.",
+      "point4": "Developed a distinctive personal style recognised and sought after by local buyers."
+    },
+    "skills": {
+      "badge": "Skills",
+      "title": "Artistic Strengths",
+      "strengths_label": "Strengths",
+      "digital_label": "Digital Skills",
+      "languages_label": "Languages",
+      "strength1": "Expressive painting & drawing",
+      "strength2": "Detail-oriented composition",
+      "strength3": "Mixed-media techniques",
+      "strength4": "Conceptual storytelling",
+      "digital3": "Social media content creation",
+      "lang1": "Arabic (native)",
+      "lang2": "English (fluent)",
+      "lang3": "Basic Hebrew"
+    },
+    "cta": {
+      "title": "Interested in the Artist's Work?",
+      "description": "Explore the full collection of original paintings, available for purchase directly from the artist.",
+      "shopBtn": "Shop Paintings",
+      "contactBtn": "Contact the Artist"
+    }
   }
 }

@@ -16,12 +16,10 @@ const stats = [
     value: "10+",
     label: "aboutGallery.stats.years",
   },
-
   {
     value: String(paintings.length),
     label: "aboutGallery.stats.works",
   },
-
   {
     value: "2015",
     label: "aboutGallery.stats.since",
@@ -32,7 +30,7 @@ const AboutGallery = () => {
   const { t } = useLanguage();
 
   return (
-    <section className="bg-black text-white py-24 sm:py-32">
+    <section className="bg-[#4F3523] text-[#d7d4cf] py-24 sm:py-32">
       <div
         className="
         max-w-7xl mx-auto
@@ -41,7 +39,8 @@ const AboutGallery = () => {
         gap-16 items-center
       "
       >
-        <div className="relative aspect-[4/5] bg-gray-800">
+        {/* صورة الفنانة */}
+        <div className="relative aspect-[4/5] bg-[#65452E]">
           <Image
             src="/1.png"
             alt="Bloom of Thought"
@@ -50,12 +49,13 @@ const AboutGallery = () => {
             className="object-cover"
           />
 
+          {/* صندوق الاقتباس - تم تحويله إلى البيج والنص البني */}
           <div
             className="
             absolute -bottom-6 -right-6
             hidden sm:block
-            bg-[#b58610]
-            text-black
+            bg-[#d7d4cf]
+            text-[#4F3523]
             px-8 py-6
           "
           >
@@ -76,10 +76,11 @@ const AboutGallery = () => {
           </div>
         </div>
 
+        {/* النصوص */}
         <div>
           <span
             className="
-            text-[#b58610]
+            text-[#E5D9CA]
             text-sm
             uppercase
             tracking-widest
@@ -95,6 +96,7 @@ const AboutGallery = () => {
             text-4xl sm:text-5xl
             font-light
             mb-6
+            text-[#F7F3EC]
           "
           >
             {t("aboutGallery.title")}
@@ -102,7 +104,7 @@ const AboutGallery = () => {
 
           <p
             className="
-            text-white/60
+            text-[#d7d4cf]
             leading-relaxed
             mb-6
           "
@@ -112,7 +114,7 @@ const AboutGallery = () => {
 
           <p
             className="
-            text-white/60
+            text-[#d7d4cf]
             leading-relaxed
             mb-10
           "
@@ -120,6 +122,7 @@ const AboutGallery = () => {
             {t("aboutGallery.paragraph2")}
           </p>
 
+          {/* الإحصائيات */}
           <div
             className="
             grid grid-cols-3
@@ -133,7 +136,7 @@ const AboutGallery = () => {
                   font-['Cormorant_Garamond']
                   text-3xl sm:text-4xl
                   font-light
-                  text-[#b58610]
+                  text-[#d7d4cf]
                 "
                 >
                   {s.value}
@@ -141,7 +144,7 @@ const AboutGallery = () => {
 
                 <p
                   className="
-                  text-white/40
+                  text-[#d7d4cf]/60
                   text-xs
                   uppercase
                   tracking-wider
@@ -154,19 +157,20 @@ const AboutGallery = () => {
             ))}
           </div>
 
+          {/* الزر - تم تحويله للبيج مع النص البني */}
           <Link
             href="/about"
             className="
               inline-block
-              bg-amber-100
-              text-black
+              bg-[#d7d4cf]
+              text-[#4F3523]
               px-8 py-3
               rounded-full
               text-sm
               uppercase
               tracking-wider
               font-medium
-              hover:bg-[#c9971a]
+              hover:bg-[#E5D9CA]
               transition-colors
               duration-300
             "

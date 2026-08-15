@@ -12,7 +12,7 @@ const Testimonials = () => {
       flex flex-col
       items-center justify-center
       w-full min-h-screen
-      bg-white text-gray-800
+      bg-[#d7d4cf] text-[#4F3523]
       px-4 py-16
     "
     >
@@ -23,7 +23,6 @@ const Testimonials = () => {
           text-3xl sm:text-4xl md:text-5xl
           font-light italic
           leading-[1.4]
-          text-gray-800
         '
         >
           “{t("testimonials.quotePart1")}
@@ -32,7 +31,7 @@ const Testimonials = () => {
             className="
             font-bold
             not-italic
-            text-[#b58610]
+            text-[#65452E]
           "
           >
             {t("testimonials.quotePart2")}
@@ -41,10 +40,11 @@ const Testimonials = () => {
         </p>
       </div>
 
+      {/* الخط الزخرفي - تحول من الذهبي إلى البني */}
       <div
         className="
         w-12 h-0.5
-        bg-[#b58610]
+        bg-[#65452E]
         my-6
       "
       />
@@ -55,7 +55,7 @@ const Testimonials = () => {
         text-xl sm:text-2xl
         font-bold
         tracking-wide
-        text-gray-800
+        text-[#4F3523]
       "
       >
         {t("testimonials.name")}
@@ -63,7 +63,7 @@ const Testimonials = () => {
 
       <p
         className="
-        text-gray-500
+        text-[#65452E]
         text-xs sm:text-sm
         uppercase
         tracking-widest
@@ -75,7 +75,7 @@ const Testimonials = () => {
 
       <p
         className="
-        text-gray-500
+        text-[#4F3523]/80
         text-xs sm:text-sm
         text-center
         max-w-md
@@ -86,6 +86,7 @@ const Testimonials = () => {
         {t("testimonials.description")}
       </p>
 
+      {/* الزر - تحول من الذهبي إلى كريمي مع نص بني */}
       <a
         href="https://instagram.com/nana.artistt"
         target="_blank"
@@ -95,13 +96,13 @@ const Testimonials = () => {
           items-center
           gap-2
           mt-6
-          bg-[#b58610]
-          text-white
+          bg-[#F7F3EC]
+          text-[#4F3523]
           px-6 py-3
           rounded-full
           text-sm
           font-medium
-          hover:bg-[#c9971a]
+          hover:bg-[#E5D9CA]
           hover:scale-105
           transition-all
           duration-300
