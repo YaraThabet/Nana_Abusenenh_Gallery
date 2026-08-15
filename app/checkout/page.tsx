@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/app/context/CartContext";
@@ -18,8 +17,8 @@ const CheckoutPage = () => {
   }>({ type: null, message: "" });
 
   const [formData, setFormData] = useState({
-    nameAr: "",      // ✅ الاسم بالعربية
-    nameEn: "",      // ✅ الاسم بالإنجليزية
+    nameAr: "", // ✅ الاسم بالعربية
+    nameEn: "", // ✅ الاسم بالإنجليزية
     email: "",
     phone: "",
     address: "",
@@ -72,25 +71,29 @@ const CheckoutPage = () => {
       if (response.ok) {
         setNotification({
           type: "success",
-          message: language === 'ar' 
-            ? "✅ تم تقديم الطلب بنجاح! سنتواصل معك قريباً."
-            : "✅ Order placed successfully! We will contact you soon.",
+          message:
+            language === "ar"
+              ? "✅ تم تقديم الطلب بنجاح! سنتواصل معك قريباً."
+              : "✅ Order placed successfully! We will contact you soon.",
         });
       } else {
         setNotification({
           type: "error",
-          message: result.error || (language === 'ar' 
-            ? "حدث خطأ ما. يرجى المحاولة مرة أخرى."
-            : "Something went wrong. Please try again."),
+          message:
+            result.error ||
+            (language === "ar"
+              ? "حدث خطأ ما. يرجى المحاولة مرة أخرى."
+              : "Something went wrong. Please try again."),
         });
       }
     } catch (error) {
       console.error("Error placing order:", error);
       setNotification({
         type: "error",
-        message: language === 'ar'
-          ? "خطأ في الشبكة. يرجى التحقق من اتصالك والمحاولة مرة أخرى."
-          : "Network error. Please check your connection and try again.",
+        message:
+          language === "ar"
+            ? "خطأ في الشبكة. يرجى التحقق من اتصالك والمحاولة مرة أخرى."
+            : "Network error. Please check your connection and try again.",
       });
     } finally {
       setLoading(false);
@@ -100,11 +103,13 @@ const CheckoutPage = () => {
   // ✅ إذا كانت السلة فارغة
   if (cart.length === 0 && notification.type !== "success") {
     return (
-      <div 
-        className="min-h-screen flex flex-col items-center justify-center px-4"
-        dir={language === 'ar' ? 'rtl' : 'ltr'}
+      <div
+        className="min-h-screen flex flex-col items-center justify-center px-4 bg-[#F7F3EC]"
+        dir={language === "ar" ? "rtl" : "ltr"}
       >
-        <h2 className="text-2xl font-bold mb-4">{t("checkout.emptyCart")}</h2>
+        <h2 className="text-2xl font-bold mb-4 text-[#4F3523]">
+          {t("checkout.emptyCart")}
+        </h2>
         <Link href="/shop" className="text-[#b58610] hover:underline">
           {t("checkout.continueShopping")}
         </Link>
@@ -113,22 +118,24 @@ const CheckoutPage = () => {
   }
 
   return (
-    <div 
-      className="min-h-screen px-4 sm:px-8 lg:px-23 pt-24 md:pt-28 pb-16"
-      dir={language === 'ar' ? 'rtl' : 'ltr'}
+    <div
+      className="min-h-screen bg-[#F7F3EC] px-4 sm:px-8 lg:px-23 pt-24 md:pt-28 pb-16"
+      dir={language === "ar" ? "rtl" : "ltr"}
     >
       {/* ✅ زر العودة */}
       <button
         onClick={() => router.back()}
-        className={`flex items-center gap-2 text-gray-600 hover:text-[#b58610] transition-colors duration-300 mb-6 ${
-          language === 'ar' ? 'flex-row-reverse' : ''
+        className={`flex items-center gap-2 text-[#4F3523]/60 hover:text-[#b58610] transition-colors duration-300 mb-6 ${
+          language === "ar" ? "flex-row-reverse" : ""
         }`}
       >
-        <ArrowLeft className={`w-5 h-5 ${language === 'ar' ? 'rotate-180' : ''}`} />
+        <ArrowLeft
+          className={`w-5 h-5 ${language === "ar" ? "rotate-180" : ""}`}
+        />
         {t("checkout.back")}
       </button>
 
-      <h1 className="text-3xl font-bold font-['Cormorant_Garamond'] mb-8">
+      <h1 className="text-3xl font-bold font-['Cormorant_Garamond'] mb-8 text-[#4F3523]">
         {t("checkout.title")}
       </h1>
 
@@ -138,7 +145,7 @@ const CheckoutPage = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* ✅ حقل الاسم بالعربية */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[#4F3523]/80 mb-1">
                 {t("checkout.fullNameAr")} *
               </label>
               <input
@@ -147,7 +154,7 @@ const CheckoutPage = () => {
                 required
                 value={formData.nameAr}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#b58610] focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-[#E5D9CA] bg-white/50 rounded-xl focus:ring-2 focus:ring-[#b58610]/20 focus:border-[#b58610] outline-none transition-all text-[#4F3523] placeholder:text-[#4F3523]/50"
                 placeholder={t("checkout.fullNameArPlaceholder")}
                 dir="rtl"
               />
@@ -155,7 +162,7 @@ const CheckoutPage = () => {
 
             {/* ✅ حقل الاسم بالإنجليزية */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[#4F3523]/80 mb-1">
                 {t("checkout.fullNameEn")} *
               </label>
               <input
@@ -164,14 +171,14 @@ const CheckoutPage = () => {
                 required
                 value={formData.nameEn}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#b58610] focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-[#E5D9CA] bg-white/50 rounded-xl focus:ring-2 focus:ring-[#b58610]/20 focus:border-[#b58610] outline-none transition-all text-[#4F3523] placeholder:text-[#4F3523]/50"
                 placeholder={t("checkout.fullNameEnPlaceholder")}
                 dir="ltr"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[#4F3523]/80 mb-1">
                 {t("checkout.email")} *
               </label>
               <input
@@ -180,14 +187,14 @@ const CheckoutPage = () => {
                 required
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#b58610] focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-[#E5D9CA] bg-white/50 rounded-xl focus:ring-2 focus:ring-[#b58610]/20 focus:border-[#b58610] outline-none transition-all text-[#4F3523] placeholder:text-[#4F3523]/50"
                 placeholder="john@example.com"
                 dir="ltr"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[#4F3523]/80 mb-1">
                 {t("checkout.phone")} *
               </label>
               <input
@@ -196,14 +203,16 @@ const CheckoutPage = () => {
                 required
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#b58610] focus:border-transparent outline-none"
-                placeholder={language === 'ar' ? '+970 59 123 4567' : '+970 59 123 4567'}
+                className="w-full px-4 py-3 border border-[#E5D9CA] bg-white/50 rounded-xl focus:ring-2 focus:ring-[#b58610]/20 focus:border-[#b58610] outline-none transition-all text-[#4F3523] placeholder:text-[#4F3523]/50"
+                placeholder={
+                  language === "ar" ? "+970 59 123 4567" : "+970 59 123 4567"
+                }
                 dir="ltr"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-[#4F3523]/80 mb-1">
                 {t("checkout.address")} *
               </label>
               <textarea
@@ -212,19 +221,23 @@ const CheckoutPage = () => {
                 value={formData.address}
                 onChange={handleChange}
                 rows={3}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#b58610] focus:border-transparent outline-none resize-none"
-                placeholder={language === 'ar' ? 'رام الله، فلسطين' : '123 Main St, City, Country'}
-                dir={language === 'ar' ? 'rtl' : 'ltr'}
+                className="w-full px-4 py-3 border border-[#E5D9CA] bg-white/50 rounded-xl focus:ring-2 focus:ring-[#b58610]/20 focus:border-[#b58610] outline-none transition-all resize-none text-[#4F3523] placeholder:text-[#4F3523]/50"
+                placeholder={
+                  language === "ar"
+                    ? "رام الله، فلسطين"
+                    : "123 Main St, City, Country"
+                }
+                dir={language === "ar" ? "rtl" : "ltr"}
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-3 rounded-lg font-medium transition-colors duration-300 ${
+              className={`w-full py-3 rounded-xl font-medium transition-colors duration-300 ${
                 loading
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-[#b58610] hover:bg-[#a0740e] text-white"
+                  ? "bg-[#b58610]/50 cursor-not-allowed text-white"
+                  : "bg-[#b58610] hover:bg-[#a0740e] text-white shadow-sm hover:shadow-md"
               }`}
             >
               {loading ? t("checkout.processing") : t("checkout.placeOrder")}
@@ -233,11 +246,16 @@ const CheckoutPage = () => {
         </div>
 
         {/* ✅ ملخص الطلب */}
-        <div className="lg:w-1/3 bg-gray-50 rounded-2xl p-6 h-fit">
-          <h2 className="text-xl font-semibold mb-4">{t("checkout.orderSummary")}</h2>
+        <div className="lg:w-1/3 bg-[#FAF8F5] border border-[#E5D9CA] shadow-[#4F3523]/10 rounded-2xl p-6 h-fit">
+          <h2 className="text-xl font-semibold mb-4 text-[#4F3523]">
+            {t("checkout.orderSummary")}
+          </h2>
           <div className="space-y-3">
             {cart.map((item) => (
-              <div key={item.id} className="flex justify-between text-sm">
+              <div
+                key={item.id}
+                className="flex justify-between text-sm text-[#4F3523]/80"
+              >
                 <span>
                   {item.title} × {item.quantity}
                 </span>
@@ -245,8 +263,8 @@ const CheckoutPage = () => {
               </div>
             ))}
           </div>
-          <div className="border-t border-gray-200 mt-4 pt-4">
-            <div className="flex justify-between font-semibold text-lg">
+          <div className="border-t border-[#E5D9CA] mt-4 pt-4">
+            <div className="flex justify-between font-semibold text-lg text-[#4F3523]">
               <span>{t("checkout.total")}</span>
               <span>${totalPrice.toLocaleString()}</span>
             </div>
@@ -256,26 +274,28 @@ const CheckoutPage = () => {
 
       {/* ✅ الإشعار */}
       {notification.type && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 text-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-[#4F3523]/80 backdrop-blur-sm">
+          <div className="bg-[#FAF8F5] border border-[#E5D9CA] rounded-2xl shadow-2xl max-w-md w-full p-6 text-center">
             {notification.type === "success" ? (
               <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
             ) : (
               <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
             )}
-            <h3 className="text-xl font-semibold mb-2">
-              {notification.type === "success" 
-                ? t("checkout.orderPlaced") 
+            <h3 className="text-xl font-semibold mb-2 text-[#4F3523]">
+              {notification.type === "success"
+                ? t("checkout.orderPlaced")
                 : t("checkout.error")}
             </h3>
-            <p className="text-gray-600 text-sm mb-6">{notification.message}</p>
+            <p className="text-[#4F3523]/70 text-sm mb-6">
+              {notification.message}
+            </p>
             <button
               onClick={() => {
                 clearCart();
                 setNotification({ type: null, message: "" });
                 router.push("/shop");
               }}
-              className="px-6 py-2 bg-[#b58610] text-white rounded-lg hover:bg-[#a0740e] transition-colors duration-300"
+              className="px-6 py-2 bg-[#b58610] text-white rounded-lg hover:bg-[#a0740e] transition-colors duration-300 shadow-sm hover:shadow-md"
             >
               {notification.type === "success"
                 ? t("checkout.continueShopping")
