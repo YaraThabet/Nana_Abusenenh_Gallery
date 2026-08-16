@@ -225,7 +225,6 @@ const Page = () => {
 
         {/* ✅ الفلتر الجانبي (ديسكتوب) */}
         <div className="hidden md:flex md:w-1/4">
-          {/* ملاحظة: يفضل تحديث ملف FilterSidebar بنفس نظام الألوان ليكون متناسقاً */}
           <FilterSidebar
             selectedCategories={selectedCategories}
             setSelectedCategories={setSelectedCategories}
@@ -385,25 +384,6 @@ const Page = () => {
                           <p className="text-xs text-[#4F3523]/60 mt-2 line-clamp-1">
                             {medium}
                           </p>
-                          <div className="flex justify-center mt-4">
-                            <Link href={`/shop/${artwork.id}`}>
-                              <button
-                                className="
-                                   px-6 py-2
-                                 bg-[#b58610]/10
-                                   border border-[#b58610]
-                                  text-[#b58610]
-                                   text-xs font-medium
-                                   rounded-full
-                                  hover:bg-[#b58610]
-                                  hover:text-white
-                                   transition-colors duration-300
-                                 "
-                              >
-                                {t("shop.viewDetails")}
-                              </button>
-                            </Link>
-                          </div>
                         </div>
                       </Link>
                     );
@@ -417,11 +397,10 @@ const Page = () => {
                   <button
                     onClick={() => goToPage(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className={`p-2 rounded-lg transition-colors duration-200 ${
-                      currentPage === 1
+                    className={`p-2 rounded-lg transition-colors duration-200 ${currentPage === 1
                         ? "text-[#E5D9CA] cursor-not-allowed"
                         : "text-[#4F3523] hover:bg-[#F7F3EC] hover:text-[#b58610]"
-                    }`}
+                      }`}
                     aria-label={
                       language === "ar" ? "الصفحة السابقة" : "Previous page"
                     }
@@ -433,13 +412,12 @@ const Page = () => {
                     <button
                       key={index}
                       onClick={() => typeof page === "number" && goToPage(page)}
-                      className={`min-w-[40px] h-10 px-3 rounded-lg text-sm font-medium transition-colors duration-200 ${
-                        page === currentPage
+                      className={`min-w-[40px] h-10 px-3 rounded-lg text-sm font-medium transition-colors duration-200 ${page === currentPage
                           ? "bg-[#b58610] text-white shadow-md"
                           : page === "..."
                             ? "text-[#4F3523]/40 cursor-default"
                             : "text-[#4F3523] hover:bg-[#F7F3EC] hover:text-[#b58610]"
-                      }`}
+                        }`}
                       disabled={page === "..."}
                     >
                       {page}
@@ -449,11 +427,10 @@ const Page = () => {
                   <button
                     onClick={() => goToPage(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className={`p-2 rounded-lg transition-colors duration-200 ${
-                      currentPage === totalPages
+                    className={`p-2 rounded-lg transition-colors duration-200 ${currentPage === totalPages
                         ? "text-[#E5D9CA] cursor-not-allowed"
                         : "text-[#4F3523] hover:bg-[#F7F3EC] hover:text-[#b58610]"
-                    }`}
+                      }`}
                     aria-label={
                       language === "ar" ? "الصفحة التالية" : "Next page"
                     }

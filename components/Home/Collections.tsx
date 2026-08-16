@@ -2,6 +2,8 @@
 
 import React from "react";
 import { useLanguage } from "@/app/context/LanguageContext";
+import Image from "next/image";
+import Link from "next/link"; // ✅ إضافة استيراد Link
 
 const collections = [
   {
@@ -12,18 +14,16 @@ const collections = [
       "Exploring the tactile beauty of natural textures and stone-like surfaces.",
     description_ar:
       "استكشاف الجمال الحسي للخامات الطبيعية والأسطح الشبيهة بالحجر.",
-    image: "./8.png",
+    image: "/8.png",
   },
-
   {
     id: 2,
     title: "Coastal Studies",
     title_ar: "دراسات ساحلية",
     description: "Inspired by the rhythm of the sea and coastal landscapes.",
     description_ar: "مستوحاة من إيقاع البحر والمناظر الطبيعية الساحلية.",
-    image: "./3.png",
+    image: "/7.png",
   },
-
   {
     id: 3,
     title: "Colour & Form",
@@ -31,7 +31,7 @@ const collections = [
     description:
       "A vibrant exploration of color relationships and abstract forms.",
     description_ar: "استكشاف نابض بالعلاقات اللونية والأشكال التجريدية.",
-    image: "./1.png",
+    image: "/1.png",
   },
 ];
 
@@ -42,20 +42,13 @@ const Collections = () => {
     <div className="flex flex-col w-full min-h-screen items-center pt-14 sm:pt-20 pb-20 bg-[#d7d4cf] px-4 sm:px-6 lg:px-8">
       {/* ================= HEADER ================= */}
       <div className="max-w-4xl text-center space-y-3 sm:space-y-5">
-        {/* Small Label - تم تغيير اللون والمسافات */}
         <p className="uppercase text-[#80624A] text-[10px] sm:text-xs tracking-[0.3em] font-medium">
           {t("collections.badge")}
         </p>
-
-        {/* Title - تم تغيير اللون */}
         <h1 className='uppercase font-["Cormorant_Garamond"] font-semibold text-[#65452E] text-3xl sm:text-4xl md:text-5xl tracking-wide'>
           {t("collections.title")}
         </h1>
-
-        {/* Decorative Line - خط زخرفي جديد */}
         <div className="mx-auto h-px w-12 bg-[#65452E] opacity-70" />
-
-        {/* Description - تم تغيير اللون */}
         <p className="text-[#80624A] text-sm sm:text-base pt-1 sm:pt-2 max-w-2xl mx-auto px-4 leading-7">
           {t("collections.description")}
         </p>
@@ -73,19 +66,22 @@ const Collections = () => {
               : collection.description;
 
           return (
-            <div
+            // ✅ تم استبدال الـ div الرئيسي بـ Link للانتقال إلى /shop
+            <Link
               key={collection.id}
+              href="/shop"
               className="
                 group relative rounded-2xl overflow-hidden
                 shadow-md hover:shadow-2xl
                 transition-all duration-500
-                h-56 sm:h-64 md:h-72 cursor-pointer
+                h-56 sm:h-64 md:h-72 block
               "
             >
               {/* الصورة */}
-              <img
+              <Image
                 src={collection.image}
                 alt={title}
+                fill
                 className="
                   absolute inset-0 w-full h-full
                   object-cover
@@ -94,7 +90,7 @@ const Collections = () => {
                 "
               />
 
-              {/* التراكب الأساسي - تم تغيير اللون إلى بني داكن */}
+              {/* التراكب الأساسي */}
               <div
                 className="
                   absolute inset-0
@@ -104,7 +100,7 @@ const Collections = () => {
                 "
               />
 
-              {/* التراكب المتدرج - تم تغيير اللون */}
+              {/* التراكب المتدرج */}
               <div
                 className="
                   absolute inset-0
@@ -137,8 +133,8 @@ const Collections = () => {
                   {description}
                 </p>
 
-                {/* الزر - تم تغيير الألوان لتطابق الثانية */}
-                <button
+                {/* ✅ تم تحويل الزر إلى عنصر مرئي فقط لأن البطاقة أصبحت رابطًا كاملًا */}
+                <span
                   className="
                     mt-3 sm:mt-4
                     bg-white/20
@@ -156,9 +152,9 @@ const Collections = () => {
                   "
                 >
                   {t("collections.explore")}
-                </button>
+                </span>
               </div>
-            </div>
+            </Link>
           );
         })}
       </div>

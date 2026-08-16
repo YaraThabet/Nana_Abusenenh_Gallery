@@ -157,17 +157,18 @@ const FeaturedPaintings = () => {
           const medium = getLocalizedText(artwork, "medium", language);
 
           return (
-            <div
-              key={artwork.id}
-              className="
+            <Link key={artwork.id} href={`/shop`}>
+              <div
+                key={artwork.id}
+                className="
                 group
                 flex
                 flex-col
                 items-center
               "
-            >
-              {/* ================= IMAGE ================= */}
-              
+              >
+                {/* ================= IMAGE ================= */}
+
                 <div
                   className="
                     relative
@@ -262,20 +263,19 @@ const FeaturedPaintings = () => {
                     </span>
                   </div>
                 </div>
-             
 
-              {/* ================= ARTWORK INFO ================= */}
-              <div
-                className="
+                {/* ================= ARTWORK INFO ================= */}
+                <div
+                  className="
                   mt-4
                   sm:mt-5
                   text-center
                   px-2
                 "
-              >
-                {/* Title */}
-                <h3
-                  className='
+                >
+                  {/* Title */}
+                  <h3
+                    className='
                     font-["Cormorant_Garamond"]
                     font-semibold
                     text-lg
@@ -283,13 +283,13 @@ const FeaturedPaintings = () => {
                     text-[#65452E]
                     tracking-wide
                   '
-                >
-                  {title}
-                </h3>
+                  >
+                    {title}
+                  </h3>
 
-                {/* Medium */}
-                <p
-                  className="
+                  {/* Medium */}
+                  <p
+                    className="
                     text-[10px]
                     sm:text-xs
                     text-[#80624A]
@@ -297,11 +297,12 @@ const FeaturedPaintings = () => {
                     mt-1
                     uppercase
                   "
-                >
-                  {medium}
-                </p>
+                  >
+                    {medium}
+                  </p>
+                </div>
               </div>
-            </div>
+            </Link>
           );
         })}
       </div>

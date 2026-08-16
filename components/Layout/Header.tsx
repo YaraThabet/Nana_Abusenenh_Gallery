@@ -14,13 +14,10 @@ export const Header = () => {
   const { language, toggleLanguage, t } = useLanguage();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
 
-  // اللون البني المستوحى من إطار اللوحة في الـ Hero
   const brown = "#65452E";
-  const darkBrown = "#4F3523";
 
   const navLinks = [
     { href: "/", label: "header.home" },
@@ -35,16 +32,7 @@ export const Header = () => {
     { Icon: ShoppingBag, label: "Cart", type: "cart" },
   ];
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
+  // إغلاق القائمة عند تغيير حجم الشاشة
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
@@ -53,7 +41,6 @@ export const Header = () => {
     };
 
     window.addEventListener("resize", handleResize);
-
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -67,13 +54,12 @@ export const Header = () => {
       {/* ================= HEADER ================= */}
       <header
         className={`
-          fixed top-0 left-0 right-0 z-50
-          transition-all duration-300 ease-in-out
-          ${
-            isScrolled
-              ? " backdrop-blur-md shadow-lg"
-              : "bg-white/5 backdrop-blur-sm"
-          }
+          fixed
+          top-0 left-0 right-0
+          z-50
+          bg-white
+          shadow-md
+          transition-colors duration-300
         `}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -276,8 +262,7 @@ export const Header = () => {
             top-full
             left-0
             right-0
-            bg-white/95
-            backdrop-blur-md
+            bg-white
             shadow-xl
             overflow-hidden
             transition-all

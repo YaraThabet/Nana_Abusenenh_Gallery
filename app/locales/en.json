@@ -8,6 +8,13 @@
     "subBrand": "Nana Hashem Abu Seneineh",
     "language": "Language"
   },
+    "hero": {
+    "artistName": "Nana Hashem Abu Seneineh",
+    "title": "Handcrafted Textured Art That Brings Warmth to Your Space",
+    "subtitle": "Original, one-of-a-kind pieces sculpted by hand — each artwork adds dimension, texture, and character to any room.",
+    "shopBtn": "Shop the Collection",
+    "contactBtn": "Get in Touch"
+  },
   "cart": {
     "title": "Shopping Cart",
     "empty": "Your cart is empty",
