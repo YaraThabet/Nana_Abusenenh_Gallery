@@ -194,6 +194,8 @@
       "title": "العنوان",
       "medium": "الوسيط (الخامة)",
       "price": "السعر",
+      "original_price": "السعر الأصلي",
+      "discount_price": "السعر بعد الخصم",
       "status": "الحالة"
     }
   },
@@ -231,7 +233,8 @@
     "submit_update": "تحديث العمل الفني",
     "status": "الحالة",
     "status_available": "متاح للبيع",
-    "status_sold": "تم بيعه"
+    "status_sold": "تم بيعه",
+     "discount_price": "سعر الخصم"
   },
   "login": {
     "title": "دخول الأدمن",

@@ -98,7 +98,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div
       dir={isArabic ? "rtl" : "ltr"}
-      className="min-h-screen bg-[#faf9f7]"
+      className="min-h-screen bg-white"
     >
       {/* =====================================
           Mobile Header
@@ -154,7 +154,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       <aside
         className={`
           fixed
-          top-24
+          top-0
           bottom-0
           z-50
           w-[260px]
@@ -334,14 +334,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       ===================================== */}
       <main
         className={`
-          min-h-screen
-          pt-24
-          p-5
-          md:p-8
-          lg:p-10
-          transition-all
-          duration-300
-
+          top-0
           ${isArabic ? "md:mr-[260px]" : "md:ml-[260px]"}
         `}
       >

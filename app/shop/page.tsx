@@ -22,6 +22,7 @@ type Artwork = {
   medium: string;
   medium_ar?: string;
   price: number;
+  discount_price: number | null;
   image_url: string;
   is_available: boolean;
   is_sold: boolean;
@@ -364,9 +365,23 @@ const Page = () => {
                             {description}
                           </p>
                           <div className="flex justify-between items-center mt-4">
-                            <span className="text-[#b58610] font-semibold text-lg">
-                              ${artwork.price.toLocaleString()}
-                            </span>
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                              {/* السعر الأساسي (مع خصم) */}
+                              <span className="text-[#b58610] font-semibold text-lg">
+                                {artwork.discount_price
+                                  ? `₪${artwork.discount_price.toLocaleString()}`
+                                  : `₪${artwork.price.toLocaleString()}`}
+                              </span>
+
+                              {/* سعر مشطوب (السعر الأصلي إذا كان هناك خصم) */}
+                              {artwork.discount_price && (
+                                <span className="text-sm text-[#4F3523]/50 line-through">
+                                  ₪{artwork.price.toLocaleString()}
+                                </span>
+                              )}
+                            </div>
+
+                            {/* حالة المنتج (بقية الكود كما هو) */}
                             {artwork.is_sold ? (
                               <span className="text-red-500 text-sm font-medium">
                                 {t("shop.sold")}
@@ -397,10 +412,11 @@ const Page = () => {
                   <button
                     onClick={() => goToPage(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className={`p-2 rounded-lg transition-colors duration-200 ${currentPage === 1
+                    className={`p-2 rounded-lg transition-colors duration-200 ${
+                      currentPage === 1
                         ? "text-[#E5D9CA] cursor-not-allowed"
                         : "text-[#4F3523] hover:bg-[#F7F3EC] hover:text-[#b58610]"
-                      }`}
+                    }`}
                     aria-label={
                       language === "ar" ? "الصفحة السابقة" : "Previous page"
                     }
@@ -412,12 +428,13 @@ const Page = () => {
                     <button
                       key={index}
                       onClick={() => typeof page === "number" && goToPage(page)}
-                      className={`min-w-[40px] h-10 px-3 rounded-lg text-sm font-medium transition-colors duration-200 ${page === currentPage
+                      className={`min-w-[40px] h-10 px-3 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                        page === currentPage
                           ? "bg-[#b58610] text-white shadow-md"
                           : page === "..."
                             ? "text-[#4F3523]/40 cursor-default"
                             : "text-[#4F3523] hover:bg-[#F7F3EC] hover:text-[#b58610]"
-                        }`}
+                      }`}
                       disabled={page === "..."}
                     >
                       {page}
@@ -427,10 +444,11 @@ const Page = () => {
                   <button
                     onClick={() => goToPage(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className={`p-2 rounded-lg transition-colors duration-200 ${currentPage === totalPages
+                    className={`p-2 rounded-lg transition-colors duration-200 ${
+                      currentPage === totalPages
                         ? "text-[#E5D9CA] cursor-not-allowed"
                         : "text-[#4F3523] hover:bg-[#F7F3EC] hover:text-[#b58610]"
-                      }`}
+                    }`}
                     aria-label={
                       language === "ar" ? "الصفحة التالية" : "Next page"
                     }

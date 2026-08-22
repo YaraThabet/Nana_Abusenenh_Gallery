@@ -28,7 +28,6 @@ export const Header = () => {
 
   const icons = [
     { Icon: Globe, label: "Language", type: "language" },
-    { Icon: User, label: "User", type: "user" },
     { Icon: ShoppingBag, label: "Cart", type: "cart" },
   ];
 
@@ -54,11 +53,11 @@ export const Header = () => {
       {/* ================= HEADER ================= */}
       <header
         className={`
-          fixed
+          sticky          
           top-0 left-0 right-0
           z-50
+          shadow-mg
           bg-white
-          shadow-md
           transition-colors duration-300
         `}
       >
@@ -394,7 +393,7 @@ export const Header = () => {
                       </h4>
 
                       <p className="text-sm text-[#80624A]">
-                        ${item.price} × {item.quantity}
+                        ₪{item.price} × {item.quantity}
                       </p>
                     </div>
 
@@ -428,7 +427,7 @@ export const Header = () => {
                       text-[#65452E]
                     "
                   >
-                    {t("cart.total")}: ${totalPrice.toLocaleString()}
+                    {t("cart.total")}: ₪{totalPrice.toLocaleString()}
                   </p>
 
                   <Link href="/checkout">

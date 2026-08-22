@@ -128,7 +128,7 @@ export const FilterSidebar = ({
               <span
                 className={`absolute ${isRTL ? "right-3" : "left-3"} top-1/2 -translate-y-1/2 text-gray-400 text-sm`}
               >
-                $
+                ₪
               </span>
               <input
                 type="number"
@@ -147,7 +147,7 @@ export const FilterSidebar = ({
               <span
                 className={`absolute ${isRTL ? "right-3" : "left-3"} top-1/2 -translate-y-1/2 text-gray-400 text-sm`}
               >
-                $
+                ₪
               </span>
               <input
                 type="number"
@@ -163,8 +163,8 @@ export const FilterSidebar = ({
           <div
             className={`flex justify-between text-xs text-gray-500 mt-3 ${isRTL ? "flex-row-reverse" : ""}`}
           >
-            <span>${minPrice}</span>
-            <span>{isRTL ? `حتى $${maxPrice}` : `Up to $${maxPrice}`}</span>
+            <span>₪{minPrice}</span>
+            <span>{isRTL ? `حتى ₪${maxPrice}` : `Up to ₪${maxPrice}`}</span>
           </div>
         </div>
       </div>

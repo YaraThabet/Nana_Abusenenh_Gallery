@@ -11,7 +11,7 @@ import {
   ImageIcon,
 } from "lucide-react";
 import { useLanguage } from "@/app/context/LanguageContext";
-import { ArtworkForm } from "@/components/ArtworkForm";
+import { ArtworkForm } from "@/components/Artwork/ArtworkForm";
 
 type Artwork = {
   id: string;
@@ -22,6 +22,7 @@ type Artwork = {
   medium: string | null;
   medium_ar: string | null;
   price: number;
+  discount_price: number | null; // <--- إضافة حقل الخصم
   image_url: string | null;
   is_available: boolean;
   is_sold: boolean;
@@ -54,6 +55,7 @@ const AdminArtworksPage = () => {
     title: "",
     title_ar: "",
     price: "",
+    discount_price: "", // <--- إضافة حقل الخصم
     description: "",
     description_ar: "",
     medium: "",
@@ -151,6 +153,9 @@ const AdminArtworksPage = () => {
             title: formData.title,
             title_ar: formData.title_ar || null,
             price: Number(formData.price),
+            discount_price: formData.discount_price
+              ? Number(formData.discount_price)
+              : null, // <--- إضافة الخصم
             description: formData.description || null,
             description_ar: formData.description_ar || null,
             medium: formData.medium || null,
@@ -169,6 +174,7 @@ const AdminArtworksPage = () => {
         title: "",
         title_ar: "",
         price: "",
+        discount_price: "",
         description: "",
         description_ar: "",
         medium: "",
@@ -197,6 +203,9 @@ const AdminArtworksPage = () => {
           title: formData.title,
           title_ar: formData.title_ar || null,
           price: Number(formData.price),
+          discount_price: formData.discount_price
+            ? Number(formData.discount_price)
+            : null, // <--- إضافة الخصم
           description: formData.description || null,
           description_ar: formData.description_ar || null,
           medium: formData.medium || null,
@@ -216,6 +225,7 @@ const AdminArtworksPage = () => {
         title: "",
         title_ar: "",
         price: "",
+        discount_price: "",
         description: "",
         description_ar: "",
         medium: "",
@@ -269,6 +279,7 @@ const AdminArtworksPage = () => {
       title: artwork.title,
       title_ar: artwork.title_ar || "",
       price: artwork.price.toString(),
+      discount_price: artwork.discount_price?.toString() || "", // <--- تعبئة الخصم عند التعديل
       description: artwork.description || "",
       description_ar: artwork.description_ar || "",
       medium: artwork.medium || "",
@@ -297,9 +308,6 @@ const AdminArtworksPage = () => {
   return (
     <div className="min-h-screen bg-[#F7F3EC] py-8 px-4 pt-30 sm:px-8 lg:px-12">
       <div className="max-w-7xl mx-auto">
-        {/* ==========================================
-            صفحة الأعمال الفنية
-            ========================================== */}
         <div className="bg-[#FAF8F5] rounded-2xl shadow-lg border border-[#E5D9CA] overflow-hidden shadow-[#4F3523]/10">
           <div className="px-8 py-6 border-b border-[#E5D9CA] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-[#F7F3EC]/50">
             <div className="flex items-center gap-3">
@@ -318,36 +326,45 @@ const AdminArtworksPage = () => {
               {t("artworks.add")}
             </button>
           </div>
-          
+
           {artworks.length === 0 ? (
             <div className="p-16 text-center">
               <div className="inline-flex items-center justify-center w-20 h-20 bg-[#E5D9CA] rounded-full mb-4">
                 <ImageIcon className="w-10 h-10 text-[#b58610]" />
               </div>
-              <h3 className="text-xl font-medium text-[#4F3523] mb-1">{t("artworks.no_artworks")}</h3>
-              <p className="text-[#4F3523]/70">Start by adding your first piece.</p>
+              <h3 className="text-xl font-medium text-[#4F3523] mb-1">
+                {t("artworks.no_artworks")}
+              </h3>
+              <p className="text-[#4F3523]/70">
+                Start by adding your first piece.
+              </p>
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full min-w-[900px]">
+                {/* <--- زيادة العرض لتجنب تكسر الجدول */}
                 <thead className="bg-[#F7F3EC]/80">
                   <tr>
-                    <th className="px-8 py-4 text-left text-xs font-semibold text-[#4F3523]/70 uppercase tracking-wider">
+                    <th className="px-8 py-4 text-left text-xs font-semibold text-[#4F3523]/70 uppercase tracking-wider min-w-[100px]">
                       {t("artworks.table.image")}
                     </th>
-                    <th className="px-8 py-4 text-left text-xs font-semibold text-[#4F3523]/70 uppercase tracking-wider">
+                    <th className="px-8 py-4 text-left text-xs font-semibold text-[#4F3523]/70 uppercase tracking-wider min-w-[140px]">
                       {t("artworks.table.title")}
                     </th>
-                    <th className="px-8 py-4 text-left text-xs font-semibold text-[#4F3523]/70 uppercase tracking-wider">
+                    <th className="px-8 py-4 text-left text-xs font-semibold text-[#4F3523]/70 uppercase tracking-wider min-w-[120px]">
                       {t("artworks.table.medium")}
                     </th>
-                    <th className="px-8 py-4 text-left text-xs font-semibold text-[#4F3523]/70 uppercase tracking-wider">
-                      {t("artworks.table.price")}
+                    <th className="px-8 py-4 text-left text-xs font-semibold text-[#4F3523]/70 uppercase tracking-wider min-w-[100px]">
+                      {t("artworks.table.original_price")}
                     </th>
-                    <th className="px-8 py-4 text-left text-xs font-semibold text-[#4F3523]/70 uppercase tracking-wider">
+                    <th className="px-8 py-4 text-left text-xs font-semibold text-[#4F3523]/70 uppercase tracking-wider min-w-[120px]">
+                      {t("artworks.table.discount_price")}
+                    </th>
+
+                    <th className="px-8 py-4 text-left text-xs font-semibold text-[#4F3523]/70 uppercase tracking-wider min-w-[100px]">
                       {t("artworks.table.status")}
                     </th>
-                    <th className="px-8 py-4 text-left text-xs font-semibold text-[#4F3523]/70 uppercase tracking-wider">
+                    <th className="px-8 py-4 text-left text-xs font-semibold text-[#4F3523]/70 uppercase tracking-wider min-w-[100px]">
                       {t("common.actions")}
                     </th>
                   </tr>
@@ -389,7 +406,12 @@ const AdminArtworksPage = () => {
                           {displayMedium}
                         </td>
                         <td className="px-8 py-5 text-sm font-bold text-[#4F3523]">
-                          ${artwork.price.toLocaleString()}
+                          ₪{artwork.price.toLocaleString()}
+                        </td>
+                        <td className="px-8 py-5 text-sm font-semibold text-[#b58610]">
+                          {artwork.discount_price
+                            ? `₪${artwork.discount_price.toLocaleString()}`
+                            : "-"}
                         </td>
                         <td className="px-8 py-5">
                           <span
@@ -431,6 +453,8 @@ const AdminArtworksPage = () => {
           )}
         </div>
       </div>
+
+      {/* ... (باقي Modals كما هو) */}
 
       {/* ==========================================
           المودالات (Add / Edit / Delete)
@@ -500,7 +524,7 @@ const AdminArtworksPage = () => {
                       : selectedArtwork.title}
                   </p>
                   <p className="text-xs text-[#4F3523]/60">
-                    ${selectedArtwork.price.toLocaleString()}
+                    ₪{selectedArtwork.price.toLocaleString()}
                   </p>
                 </div>
               </div>

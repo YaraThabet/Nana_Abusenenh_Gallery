@@ -12,10 +12,10 @@ import {
   Phone,
   Loader2,
   ImageIcon,
-  ShoppingBag
+  ShoppingBag,
 } from "lucide-react";
 import { useLanguage } from "@/app/context/LanguageContext";
-import { ArtworkForm } from "@/components/ArtworkForm";
+import { ArtworkForm } from "@/components/Artwork/ArtworkForm";
 
 type Artwork = {
   id: string;
@@ -382,12 +382,9 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7F3EC] py-8 px-4 pt-30 sm:px-8 lg:px-12">
+    <div className="min-h-screen bg-[#F7F3EC] py-8 px-4  sm:px-8 lg:px-12">
       <div className="max-w-7xl mx-auto">
-        
-        {/* ==========================================
-            عبارة ترحيبية فاخرة
-            ========================================== */}
+
         <div className="mb-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="text-3xl md:text-4xl font-serif font-bold text-[#4F3523] tracking-tight">
@@ -405,7 +402,6 @@ const AdminDashboard = () => {
           </button>
         </div>
 
-        {/* ========================================== Orders Section ========================================== */}
         <div className="bg-[#FAF8F5] rounded-2xl shadow-lg border border-[#E5D9CA] mb-12 overflow-hidden shadow-[#4F3523]/10">
           <div className="px-8 py-6 border-b border-[#E5D9CA] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-[#F7F3EC]/50">
             <div className="flex items-center gap-3">
@@ -421,14 +417,18 @@ const AdminDashboard = () => {
               {pendingOrders} {t("orders.pending")}
             </span>
           </div>
-          
+
           {pendingOrders === 0 ? (
             <div className="p-16 text-center">
               <div className="inline-flex items-center justify-center w-20 h-20 bg-[#E5D9CA] rounded-full mb-4">
                 <CheckCircle className="w-10 h-10 text-[#b58610]" />
               </div>
-              <h3 className="text-xl font-medium text-[#4F3523] mb-1">{t("orders.no_orders")}</h3>
-              <p className="text-[#4F3523]/70">Everything is running smoothly.</p>
+              <h3 className="text-xl font-medium text-[#4F3523] mb-1">
+                {t("orders.no_orders")}
+              </h3>
+              <p className="text-[#4F3523]/70">
+                Everything is running smoothly.
+              </p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -525,7 +525,7 @@ const AdminDashboard = () => {
                             </div>
                           </td>
                           <td className="px-8 py-5 text-sm font-bold text-[#4F3523]">
-                            ${order.total_price.toLocaleString()}
+                            ₪{order.total_price.toLocaleString()}
                           </td>
                           <td className="px-8 py-5 text-sm text-[#4F3523]/60">
                             {new Date(order.created_at).toLocaleDateString()}
@@ -547,12 +547,6 @@ const AdminDashboard = () => {
             </div>
           )}
         </div>
-
-        {/* ==========================================
-            ⚠️ تم إخفاء جدول الأعمال الفنية فقط (Artworks Section)
-            الكود الخاص بمنطق الإضافة والتعديل والـ Modals باقي كما هو بالأسفل
-        ========================================== */}
-        
       </div>
 
       {/* ========================================== استخدام المكون الجديد (Modals) ========================================== */}
@@ -656,7 +650,7 @@ const AdminDashboard = () => {
                   {t("orders.table.total")}:
                 </span>
                 <span className="text-[#4F3523] font-bold">
-                  ${selectedOrder.total_price.toLocaleString()}
+                  ₪{selectedOrder.total_price.toLocaleString()}
                 </span>
               </div>
             </div>
@@ -735,7 +729,7 @@ const AdminDashboard = () => {
                       : selectedArtwork.title}
                   </p>
                   <p className="text-xs text-[#4F3523]/60">
-                    ${selectedArtwork.price.toLocaleString()}
+                    ₪{selectedArtwork.price.toLocaleString()}
                   </p>
                 </div>
               </div>

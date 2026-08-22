@@ -194,6 +194,8 @@
       "title": "Title",
       "medium": "Medium",
       "price": "Price",
+      "original_price": "Original Price",
+      "discount_price": "Discounted Price",
       "status": "Status"
     }
   },
@@ -231,7 +233,8 @@
     "submit_update": "Update Artwork",
     "status": "Status",
     "status_available": "Available",
-    "status_sold": "Sold"
+    "status_sold": "Sold",
+    "discount_price": "Discount Price"
   },
   "login": {
     "title": "Admin Login",

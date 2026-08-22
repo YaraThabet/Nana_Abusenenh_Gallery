@@ -17,6 +17,7 @@ type Artwork = {
   medium: string;
   medium_ar?: string;
   price: number;
+  discount_price: number | null; // ✅ إضافة حقل الخصم
   image_url: string;
   is_available: boolean;
   is_sold: boolean;
@@ -69,10 +70,11 @@ const Page = () => {
   const handleAddToCart = () => {
     if (artwork) {
       const title = getLocalizedText(artwork, 'title', language);
+      // عند إضافة السلة، نستخدم السعر المخفض إذا وجد
       addToCart({
         id: artwork.id,
         title: title,
-        price: artwork.price,
+        price: artwork.discount_price || artwork.price, 
         image_url: artwork.image_url,
         quantity: 1,
       });
@@ -174,10 +176,23 @@ const Page = () => {
             {medium}
           </p>
 
-          {/* ✅ السعر */}
-          <p className="text-3xl font-semibold text-[#b58610] mt-4">
-            ${artwork.price.toLocaleString()}
-          </p>
+          {/* ✅ السعر (مع التعديل الجديد للخصم) */}
+          <div className="flex items-center gap-3 mt-4">
+            {artwork.discount_price ? (
+              <>
+                <p className="text-3xl font-semibold text-[#b58610]">
+                  ₪{artwork.discount_price.toLocaleString()}
+                </p>
+                <p className="text-sm text-[#4F3523]/50 line-through">
+                  ₪{artwork.price.toLocaleString()}
+                </p>
+              </>
+            ) : (
+              <p className="text-3xl font-semibold text-[#b58610]">
+                ₪{artwork.price.toLocaleString()}
+              </p>
+            )}
+          </div>
 
           {/* ✅ الوصف */}
           <p className="text-[#4F3523]/80 mt-6 leading-relaxed border-t border-[#E5D9CA] pt-6">

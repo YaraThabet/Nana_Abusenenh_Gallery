@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-import Footer from "@/components/Layout/Footer";
-import { Header } from "@/components/Layout/Header";
+// ✅ استيراد مكون العميل الخاص بك بدلاً من استيراد Header و Footer هنا
+import ClientLayout from "@/components/ClientLayout"; 
 
 import { CartProvider } from "@/app/context/CartContext";
 import { LanguageProvider } from "@/app/context/LanguageContext";
@@ -40,9 +40,8 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <LanguageProvider>
           <CartProvider>
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
+            {/* ✅ استدعاء المكون المسؤول عن إخفاء الهيدر */}
+            <ClientLayout>{children}</ClientLayout>
           </CartProvider>
         </LanguageProvider>
       </body>
